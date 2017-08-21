@@ -6,6 +6,7 @@
 \usepackage{subcaption}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{wrapfig}
 
 \graphicspath{ {./images/} }
 
@@ -98,7 +99,7 @@ Building a decision tree may be described by a two step procedure:
   samples that belong to this region.
 \end{enumerate}
 
-The regions $R_i$ are usually chosen to be multidimentional boxes (axis aligned).  We would like to find such a partition of the feature space that minimizes
+The regions $R_i$ are usually chosen to be multidimensional boxes (axis aligned).  We would like to find such a partition of the feature space that minimizes
 \begin{equation}\label{eq:tree_objective}
 \sum\limits_{j=1}^J\sum_{x\in R_j}{(x-\mean{x}_j)^2}
 \end{equation}
@@ -109,8 +110,8 @@ problem~\ref{eq:tree_objective} is computationally hard.  Usually it
 is replaced with a greedy algorithm, called \textit{recursive binary
   splitting}.  This approach starts at the top of the tree and
 greedily chooses the best split at that point that minimizes the
-variance of its subtrees.  To be more precise, for each $j$ and $s$ we
-define the hyperplanes:
+variance of its sub-trees.  To be more precise, for each $j$ and $s$ we
+define the hyper-planes:
 
 \begin{equation}
   R_1(j,s) = \{ X\lvert X_j<s \}\quad\text{and}\quad R_2(j,s) = \{ X\lvert X_j \geq s \},
@@ -122,16 +123,16 @@ We seek such $j$ and $s$ that minimize the equation:
   \sum\limits_{i:x_i\in R_1(j,s)}{(y_i-\hat{y}_{R_1})}^2 + \sum\limits_{i:x_i\in R_2(j,s)}{(y_i-\hat{y}_{R_2})}^2,
 \end{equation}
 
-Where $y_{R_1}, y_{R_2}$ are the averate responses of the samples in
+Where $y_{R_1}, y_{R_2}$ are the average responses of the samples in
 $R_1(j,s), R_2(j,s)$ respectively.  Once we found the $j$ and $s$ we
-recursively split each subtree in a similar manner.  The process is
+recursively split each sub-tree in a similar manner.  The process is
 repeated until stopping criterion (e.g., number of nodes in the leaf)
 is reached.
 
 \subsection{Bagging}
 The decision trees tend to suffer from \textit{high variance}. This
 means that if we split the training set into a number of random
-subsets and fit random tree into each subsample, we would likely to
+subsets and fit random tree into each sub-sample, we would likely to
 get much different answers from these trees when asked the same
 question.  It is known that the variance of a mean of a set of
 independent random variables is $\frac{1}{n}$.  Thus, in order to
@@ -145,7 +146,7 @@ replacement from the data set).
 Random forest suggest additional improvement over bagging, by
 decorrelating the random trees.  The issue they attempt to address is
 this: lets say there is a very dominant feature w.r.t. to task at hand
-for a given dataset.  Bagging ensures that we use different training
+for a given data-set.  Bagging ensures that we use different training
 sets, but yet, most trees will tend to first split on this dominant
 feature.  In this case the trees will resemble each other.  In random
 forest, the trees are constructed by using only a subset of features
@@ -155,81 +156,127 @@ the algorithm is allowed to consider only a subset of features.
 \section{Convolutional Neural Networks}
 
 Convolutional neural networks (CNN) leverage the availability of the
-computational power and the abundance of data.  CNNs have become a
+computational power and the abundance of data.  CNN have become a
 method of choice in a number of computer vision areas (e.g., image
 classification, object recognition).  They were also shown capable of
 per-pixel tasks, such as semantic segmentation and depth estimation
-from a single image. Works like (e.g., flownet) show that CNN's can do
+from a single image. Works like (e.g., flownet) show that CNN can do
 well for task that require feature matching as well as feature
 extraction.
 
 With these encouraging works in mind, we turn to CNN for our task.
 There are lots of network architectures out there to choose from. We
-have decided to use the ZF object recognition network as a basic
-building block for our work.
+have decided to use the ZF~\cite{DBLP:journals/corr/ZeilerF13} object
+recognition network as a basic building block for our work.
+
+The network architecture consists of 5 convolutional layers, kernel
+sizes 7, 5, 3, 3, 3.  Four initial convolutional layers are each
+followed by the relu, max-pooling and local response normalization
+operations.  Conv5 is followed by two fully connected layers separated
+by non-linearity.  The fully connected layers are of size
+4096. Finally, there is a last fully connected layer that reduced the
+network to a single output, which we are interested to learn.  We use
+euclidean loss to train the network.
+
+\section{Recurrent Neural Networks}
+
+Many problems require passing information through time.  Since the
+traditional neural networks are stateless, they are poorly suited for
+this purpose. Recurrent Neural Networks have loops in them, so that
+the information can persist.
 
 \begin{figure}[h!]
-  \includegraphics[width=0.9\linewidth]{ZF}
-  \caption{Example image of the extracted corners}
-  \label{fig:ex_corners}
+  \centering \includegraphics[width=0.15\textwidth]{RNN-rolled}
+  \caption{RNN}
+  \label{fig:rnn1}  
 \end{figure}
 
-\section{LSTM}
+In the Figure~\ref{fig:rnn1} network $A$ accepts input $x_t$ and
+outputs $h_t$.  The loop allows the network to pass information from
+one step of to another.
+
+The RNN may be thought of as a chain of multiple copies of the same
+neural network where each node passes a message to its successor.
+This is called \textit{network unrolling}, depicted in
+Figure~\ref{fig:rnn2}.  Unrolled network stresses the relation of the
+RNN to the sequential data streams.  This is an architecture of choice
+when modeling such data.
+
+\begin{figure}[ht!]
+  \centering \includegraphics[width=.7\textwidth]{RNN-unrolled}
+  \caption{An unrolled RNN}\label{fig:rnn2}
+\end{figure}
+
+It turns out that the vanilla RNN are hard to train due to the
+exploding/imploding gradients.  Fortunately, Long Short Term Memory
+Networks (LSTM), which is a special kind of RNN addresses these issues.
+
+LSTM were introduced by~\cite{hochreiter1997long}, they are
+specifically designed to model long term dependencies. Similarly to
+RNN, LSTM posses a chain-like structure. Each repeating node has an
+internal structure depicted in Figure~\ref{fig:lstm1}.
+
+\begin{figure}[ht!]
+  \centering \includegraphics[width=.7\textwidth]{LSTM3-chain}
+  \caption{Long Short Term Memory}\label{fig:lstm1}
+\end{figure}
+
+\begin{figure}[ht!]
+  \centering \includegraphics[width=.5\textwidth]{LSTM2-notation}
+  \caption{A notation used in Figure~\ref{fig:lstm1}}\label{fig:lstm2}
+\end{figure}
+
+To use the LSTM for the image data we combine the convolutional
+network with the LSTM.  $X_t$ vectors are produced by the ZF convnet.
+This is a fairly common representation used previously.  The convnet
+and the LSTM are trained jointly.
 
 \section{Experiments}
 
-\subsection{Random Forest}
-The feature vectors are created as follows: we extract and match
-sparse salient points in both input images.  The output of this stage
-is a set of a corresponding pixel locations.  Then, we compute the
-point displacement magnitudes.  Finally, we bin all the interest
-pundits according to a grid and create histogram of displacement
-magnitudes for each bin.  Concatenating all histograms together
-produces a feature vector.  Salient point choice, point matching
-method, grid and histogram size are the parameters of the algorithm we
-experiment with.
+\subsection{Data-set}
 
-\subsection{Corner Extraction and Matching}
+We train and test on the KITTI data-set~\cite{geiger2013vision}.  The
+data-set consists of 11 sequences with ground truth data.  We
+arbitrarily use sequence 00 for testing and sequences 01-10 for
+training.  There are 4540 and 18650 images in the test and the train
+sets respectively. We only use the data from the left color camera.
+Figure~\ref{fig:scales} depicts the distribution of the scale values
+over the train and the test sets.
 
-\emph{Note:} by corners we mean the image corners and by features we
-denote the machine learning features.
-
-We use Harris corners and square $11\times 11$ patches as corner
-descriptors. SSD is used as a distance measure with the winning pair
-declared a match.  To prune the outliers we fit the fundamental into
-the matched corner sets and remove the corners that do not agree with
-this model.  See Figure~\ref{fig:ex_corner_and_matching}.
-
-\begin{figure}[h!]
-	\begin{subfigure}{0.5\textwidth}
-		\includegraphics[width=0.9\linewidth]{10_001157_001158_raw_corners}
-		\caption{Example image of the extracted corners}
-		\label{fig:ex_corners}
-	\end{subfigure}
-	\begin{subfigure}{0.5\textwidth}
-		\includegraphics[width=0.9\linewidth]{10_001157_001158_final_matches}
-		\caption{Example of corner matching}		
-		\label{fig:ex_corner_matching}
-	\end{subfigure}
-	\caption{Examples of corner extraction and matching}
-	\label{fig:ex_corner_and_matching}
+\begin{figure}[!ht]
+  \begin{subfigure}{0.5\textwidth}
+    \includegraphics[width=0.9\linewidth]{00-scales}
+    \caption{The test set}		
+    \label{fig:stats-00}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    \includegraphics[width=0.9\linewidth]{no_00-scales}
+    \caption{The train set}
+    \label{fig:stats-no_00}
+  \end{subfigure}
+  \caption{Scale distributions}
+  \label{fig:scales}
 \end{figure}
+
+\subsection{Random Forest}
 
 \subsection{Feature Extraction}\label{sec:features}
 
-We bin each image into $M\times N$ grid.  For each bin in the image we
-compute the histogram of corner disparities.By disparity we denote the
-displacement of the corner in the image plane, e.g., if
-$f_1=(x_1,y_1)$ and (the matching)
-$f_2=(x_2,y_2)$ the disparity $d$ is:
-\[
-d = \norm{f_1-f_2} = \norm{(x_1,y_1)-(x_2,y_2)}
-\]
+In order to train the random forest we need to represent subsequent
+image pairs as feature vectors, which are created as follows: we
+extract and match sparse salient points in both input images.  The
+output of this stage is a set of a corresponding pixel locations.
+Then, we compute the point displacement magnitudes.  Finally, we bin
+all the interest pundits according to a grid and create histogram of
+displacement magnitudes for each bin.  Concatenating all histograms
+together produces a feature vector. We use Harris corners and square
+$11\times 11$ patches as corner descriptors. Sum of square differences
+is used as a distance measure with the winning pair declared a match.
+To prune the outliers we fit the fundamental matrix into the matched
+corner sets and remove the corners that do not agree with the model.
+Figure~\ref{fig:ex_corner_and_matching} shows a typical example of
+extracted and matched corners.
 
-We cross validated the different grid sizes ($N=4,5,6$ and $M=2,3,4$)
-and the bin sizes $nb=100,200,300,400,500$).  Grid size of $6\times 4$
-with $300$ histogram bins produced the best results (e.g. the total
-feature vector length is $6*4*300=7200$).
 
 Some statistics of the features is presented in the
 Figure~\ref{fig:feature_vectors}. We expect the peaks, that correspond
@@ -239,138 +286,77 @@ regions farther away should be closer to zero.  This behavior can be
 observed especially well for the feature vectors that correspond to
 larger camera displacements (e.g. Figure~\ref{fig:1c}).
 
-\begin{figure}[h]
-	\hspace*{-4cm}
-	\begin{subfigure}[b]{\linewidth}
-		\centering
-		\includegraphics[width=4.0in]{00_mean_feature_vector_0_47}
-		\caption{}\label{fig:1a}
-	\end{subfigure}%
-	\hspace*{-4cm}
-	\begin{subfigure}[b]{\linewidth}
-		\centering
-		\includegraphics[width=4.0in]{00_mean_feature_vector_0_81}
-		\caption{}\label{fig:1b}
-	\end{subfigure}%
-	\\
-	\hspace*{-4cm}
-	\begin{subfigure}[b]{\linewidth}
-		\centering
-		\includegraphics[width=4.0in]{00_mean_feature_vector_1_1}
-		\caption{}\label{fig:1c}
-	\end{subfigure}%
-	\caption{Average feature vectors for samples centered around the
-		specific camera translation magnitude.  Each peak corresponds to a
-		grid cell (e.g. here the grid is 4 rows by 6 columns by 300 bins,
-		so the feature vector is of the dimension 6*4*300=7200).  The grid
-		is sampled in a column-major mode. So the first four peaks
-		correspond to the leftmost column of the image grid.}
-	\label{fig:feature_vectors}
+\begin{figure}[!ht]
+  \centering
+  \begin{subfigure}{.45\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{10_001157_001158_raw_corners_left}
+    \caption{}
+    \label{fig:ex_corner_and_matching:corner}
+  \end{subfigure}
+  \begin{subfigure}{.45\linewidth}
+    \includegraphics[width=\linewidth]{10_001157_001158_final_matches1}
+    \caption{}
+    \label{fig:ex_corner_and_matching:match}    
+  \end{subfigure}
+  \caption{Typical corner extraction and
+    matching. Figure~\subref{fig:ex_corner_and_matching:corner} shows the raw
+    extracted corners, while Figure~\subref{fig:ex_corner_and_matching:match} shows
+    pruned and matched corners.}
+  \label{fig:ex_corner_and_matching}
 \end{figure}
 
-\section{Regression Models}
-
-We train random forest. The implementation we use comes from the python sklearn library.  It is called extremely random tree forest.
-
-\subsection{Results}
-
-See Figure~\ref{fig:forest_results_images4}, ~\ref{fig:forest_results_images_no04_test}
-
-\begin{figure}[h!]
-	\begin{subfigure}{.5\textwidth}
-		\includegraphics[width=\linewidth]{images4_test_raw}
-		\caption{images04 raw}		
-		\label{fig:ETR_images4_test_raw}
-	\end{subfigure}
-	\begin{subfigure}{.5\textwidth}
-		\includegraphics[width=\linewidth]{images4_test_smooth}
-		\caption{images04 EKF}		
-		\label{fig:images4_test_smooth}
-	\end{subfigure}
-	\caption{Random forest prediction evaluation for the image-set $\mathrm{images04}$}
-	\label{fig:forest_results_images4}
+\begin{figure}[!ht]
+  \centering
+  \begin{subfigure}{.45\linewidth}
+    \centering
+    \includegraphics[width=1.2\linewidth]{00_mean_feature_vector_0_47}
+    \caption{}\label{fig:1a}
+  \end{subfigure}%
+  \begin{subfigure}{.45\linewidth}
+    \centering
+    \includegraphics[width=1.2\linewidth]{00_mean_feature_vector_0_81}
+    \caption{}\label{fig:1b}
+  \end{subfigure}%
+  \\
+  \begin{subfigure}{\linewidth}
+    \centering
+    \includegraphics[width=.8\textwidth]{00_mean_feature_vector_1_1}
+    \caption{}\label{fig:1c}
+  \end{subfigure}%
+  \caption{Average feature vectors for samples centered around the
+    specific camera translation magnitude.  Each peak corresponds to a
+    grid cell (e.g. here the grid is 4 rows by 6 columns by 300 bins,
+    so the feature vector is of the dimension 6*4*300=7200).  The grid
+    is sampled in a column-major mode. So the first four peaks
+    correspond to the leftmost column of the image grid.}
+  \label{fig:feature_vectors}
 \end{figure}
 
-\begin{figure}[h!]
-	\begin{subfigure}{.5\textwidth}
-		\includegraphics[width=\linewidth]{images_no04_test_raw}
-		\caption{images\_no04\_test}
-		\label{fig:ETR_images_no04_test}
-	\end{subfigure}
-	\caption{Random forest prediction evaluation for the image-set $\mathrm{images\_no04\_test}$}
-	\label{fig:forest_results_images_no04_test}
+We bin each image into $6\times 4$ grid.  For each bin in the image we
+compute the histogram of corner disparities.  By disparity we denote
+the displacement of the corner in the image.  We use $300$-bin
+histogram for disparities (e.g, feature vector length is $7200$).
+
+We use the extracted features to fit a random forest, by means of
+recursive note splitting with sub-node variance minimization. The mean
+absolute error is 0.237 meters with a standard deviation of=0.229
+meters.  The visualization of a prediction is in the
+Figure~\ref{fig:rf_fit}.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1.2\linewidth]{yerr}
+  \caption{Visualization of the random forest prediction}
+  \label{fig:rf_fit}
 \end{figure}
 
 \section{Convolutional neural networks}
 
-We also explore convolutional neural networks as a regressor for our
-task.  The choice of the architecture is influenced
-by~\cite{fischer2015flownet}.
+We use Caffe~\cite{jia2014caffe} framework to train and test our
+models.
 
-\subsection{Architecture choice}
-TBD
-
-\subsection{Results}
-See Figures~\ref{fig:ZF_results_images4},~\ref{fig:ZF_results_images_no04_test}
-
-\begin{figure}[h!]
-	\begin{subfigure}{.5\textwidth}
-		\includegraphics[width=\linewidth]{images4_test_ZF_raw}
-		\caption{images04 raw}		
-		\label{fig:ZF_images4_test_raw}
-	\end{subfigure}
-	\begin{subfigure}{.5\textwidth}
-		\includegraphics[width=\linewidth]{images4_test_ZF_smooth}
-		\caption{images04 EKF}		
-		\label{fig:ZF_images4_test_smooth}
-	\end{subfigure}
-	\caption{ZF prediction evaluation for the image-set $\mathrm{images04}$}
-	\label{fig:ZF_results_images4}
-\end{figure}
-
-\begin{figure}[h!]
-	\begin{subfigure}{.5\textwidth}
-		\includegraphics[width=\linewidth]{images_no04_test_ZF_raw}
-		\caption{images\_no04\_test}
-		\label{fig:ZF_images_no04_test_raw}
-	\end{subfigure}
-	\caption{ZF prediction evaluation for the image-set $\mathrm{images\_no04\_test}$}
-	\label{fig:ZF_results_images_no04_test}
-\end{figure}
-
-\subsection{Experiments}
-\subsection{The dataset}
-
-We train and test on the KITTI dataset. There are 11 sequences with
-the vehicle motion ground truth (DGPS).  We organize our data like follows:
-
-\begin{itemize}
-	\item Arbitrarily choose sequence 04 for testing (image-set $\mathrm{images04}$).  This image-set contains subsequent camera frames (e.g. the subsequent images are highly correlated)
-	\item Split the remaining data into the train set (image-set $\mathrm{images\_no04}$) and the test set (image-set $\mathrm{images\_no04\_test}$).  These train/test sets are created after randomly shuffling the data.
-\end{itemize}
-
-The statistics of the scales for the above image-sets are in Figure~\ref{fig:scale_stats} (most of the mass is around 1.0 meter, which makes it about 36 km/h, since the sequences are captured at 10 fps).
-
-\begin{figure}[h!]
-	\begin{subfigure}{0.5\textwidth}
-		\includegraphics[width=0.9\linewidth]{stats_images_no04_rgb_shuf}
-		\caption{images\_no04}		
-		\label{fig:stats_images_no04_rgb_shuf}
-	\end{subfigure}
-	\begin{subfigure}{0.5\textwidth}
-		\includegraphics[width=0.9\linewidth]{stats_images_no04_rgb_test_shuf}
-		\caption{images\_no04\_test}		
-		\label{fig:stats_images_no04_rgb_test_shuf}
-	\end{subfigure}
-	\begin{subfigure}{0.5\textwidth}
-		\includegraphics[width=0.9\linewidth]{stats_images4_rgb}
-		\caption{images4}		
-		\label{fig:stats_images4_rgb}
-	\end{subfigure}
-	\caption{Scale statistics for different image sets}
-	\label{fig:scale_stats}
-\end{figure}
-
+\section{LSTM}
 
 \bibliographystyle{abbrv}
 \bibliography{report_bib}
