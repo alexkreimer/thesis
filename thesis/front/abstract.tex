@@ -1,0 +1,62 @@
+
+% Just write down your abstract here, no special commands necessary except for the \abstractEnglish{
+% before this text is used and a closing } at the end of it
+
+\abstractEnglish{ In this work we revisit the problem of visual
+  odometry. Visual odometry is the process of estimating the motion of
+  the camera by examining the changes that the motion induces on the
+  images made by it.  This work has two parts: the first part proposes
+  a novel algorithm for the visual odometry.  The approach we propose
+  exploits a scene structure typical for that seen by a moving car and
+  is suitable for use in either the stereo or the monocular setting.
+  We recover the rotation and the translation separately, thus dealing
+  with two separate, smaller problems. The rotation is estimated by
+  means of the infinite homography. The rotation estimation algorithm
+  operates on distant image points using the 3-D to partition them
+  into the distant and the near-by ones. We start with an initial
+  estimate and then refine it using an iterative procedure. After the
+  rotation is compensated for, the translation is found by means of
+  the 1-point algorithm in the stereo setting and epipole computation
+  for pure translational motion in the monocular setting. We evaluate
+  our algorithm on the KITTI dataset~\cite{Geiger2012}. The second
+  part of this work explores a method to recover the scale of camera
+  motion.  The size of a translation vector for a single moving camera
+  is not directly observable, although is desirable.  Stereo,
+  scene/camera prior assumptions were used in the past to recover the
+  translation size.  We argue that the required information is present
+  in the images and explore a number of ways to learn it.  We
+  experiment with both ``legacy'' shallow learning methods and
+  hand-crafted features as well as end-to-end learning methods based
+  on the convolutional neural networks.  }
+
+% Note that various commands don't work that well in Hebrew. Specifically,
+% if you're using hyperref, you'll have trouble with \url, \autoref, \cite
+% and friends. iitthesis-extra.sty has a workaround: the \disabledlinksL
+% command. See the .sty for details, or:
+% http://tex.stackexchange.com/q/32466/5640 for
+
+\abstractHebrew{
+
+כאן יבוא תקציר מורחב בעברית )כאשר שפת החיבור העיקרית היא אנגלית(. היקף התקציר יהיה \L{1000-2000} מילים. התקציר יהווה שלמות בפני עצמו ויהיה מובן לקורא בעל ידיעות כלליות בנושא.
+התקציר ייכתב במשפטים מקושרים שלמים, בדרך-כלל אין לציין בו מקורות ספרותיים וציטוטים. אין להתייחס למספר של פרק, סעיף, נוסחה, ציור או טבלה שבגוף החיבור, ואין להשתמש בקיצורים, סמלים ומונחים לא מקובלים, אלא אם יש בתקציר די מקום לזיהויים.
+
+אם צריך לשים קישור בתקציר העברי, )למשל לצורך ציטוט מקור, כאשר משתמשים גם ב-\L{\texttt{hyperref}} שיוצר קישורים בתוך ה-PDF עבור ציטוטי מקורות(, אפשר לעטוף אותו בתוך \L{{\textbackslash}L\{\}} , כך: \L{\cite{Hoeffding}}.
+
+\subsection*{תת-חלק בתקציר המורחב}
+
+תוכן מקוצר לגבי נושא מסוים.
+
+\subsection*{תת-חלק נוסף בתקציר המורחב}
+
+תוכן מקוצר לגבי נושא שני. התייחסות ל\emph{מושג} מסוים שהחיבור בוחן. וכולי וכולי.
+
+\subsection*{נקודה מעניינת לגבי העמודים בעברית}
+
+שימו לב כי העמודים בעברית אמורים להיות מיוצרים בסדר ה''הפוך'', הווה אומר העמוד האחרון בקובץ ה-\L{PDF} הוא הכריכה העברית, לפניו השער העברי, ודפי התקציר צריכים להופיע בסדר הפוך )וכן במספור רומי, לפי נהלי הטכניון(. כך עמוד זה, העמוד הראשון בתקציר יש לצפות, ממוספר ב-i ונמצא אחרון בקובץ ה-\L{PDF}...
+
+\newpage 
+
+... ואילו עמוד זה של התקציר המורחב בעברית, שהינו העמוד השני בתקציר, ממוספר ב-ii ונמצא ראשון בקובץ ה-\L{PDF} --- לפני עמוד i. המטרה היא, שבעת ההדפסה לא יהיה צורך להפוך דפים, לשנות את סדרם וכולי - רק להדפיס ולכרוך.
+
+}
+

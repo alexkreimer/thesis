@@ -1,0 +1,255 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{GGAM14}
+
+\bibitem[BTV06]{Bay2006}
+Herbert Bay, Tinne Tuytelaars, and Luc {Van Gool}.
+\newblock {SURF: Speeded up robust features}.
+\newblock {\em Lecture Notes in Computer Science (including subseries Lecture
+  Notes in Artificial Intelligence and Lecture Notes in Bioinformatics)}, 3951
+  LNCS:404--417, 2006.
+
+\bibitem[BYK13]{Badino2013}
+Hern{\'{a}}n Badino, Akihiro Yamamoto, and Takeo Kanade.
+\newblock {Visual odometry by multi-frame feature integration}.
+\newblock {\em Proceedings of the IEEE International Conference on Computer
+  Vision}, (Cvad 13):222--229, 2013.
+
+\bibitem[FDI{\etalchar{+}}15]{fischer2015flownet}
+Philipp Fischer, Alexey Dosovitskiy, Eddy Ilg, Philip H{\"a}usser, Caner
+  Haz{\i}rba{\c{s}}, Vladimir Golkov, Patrick van~der Smagt, Daniel Cremers,
+  and Thomas Brox.
+\newblock Flownet: Learning optical flow with convolutional networks.
+\newblock {\em arXiv preprint arXiv:1504.06852}, 2015.
+
+\bibitem[GDDM14]{girshick2014rich}
+Ross Girshick, Jeff Donahue, Trevor Darrell, and Jitendra Malik.
+\newblock Rich feature hierarchies for accurate object detection and semantic
+  segmentation.
+\newblock In {\em Proceedings of the IEEE conference on computer vision and
+  pattern recognition}, pages 580--587, 2014.
+
+\bibitem[GGAM14]{gupta2014learning}
+Saurabh Gupta, Ross Girshick, Pablo Arbel{\'a}ez, and Jitendra Malik.
+\newblock Learning rich features from rgb-d images for object detection and
+  segmentation.
+\newblock In {\em European Conference on Computer Vision}, pages 345--360.
+  Springer, 2014.
+
+\bibitem[GLSU13]{geiger2013vision}
+Andreas Geiger, Philip Lenz, Christoph Stiller, and Raquel Urtasun.
+\newblock Vision meets robotics: The kitti dataset.
+\newblock {\em The International Journal of Robotics Research},
+  32(11):1231--1237, 2013.
+
+\bibitem[GLU12]{Geiger2012}
+Andreas Geiger, Philip Lenz, and Raquel Urtasun.
+\newblock {Are we ready for autonomous driving? the KITTI vision benchmark
+  suite}.
+\newblock {\em Proceedings of the IEEE Computer Society Conference on Computer
+  Vision and Pattern Recognition}, pages 3354--3361, 2012.
+
+\bibitem[Gov09]{Govender2009}
+Natasha Govender.
+\newblock {Evaluation of Feature Detection Algorithms for Structure from
+  Motion}.
+\newblock {\em Csir}, 2009.
+
+\bibitem[GZS11]{Geiger2011}
+Andreas Geiger, Julius Ziegler, and Christoph Stiller.
+\newblock {StereoScan: Dense 3d reconstruction in real-time}.
+\newblock {\em IEEE Intelligent Vehicles Symposium, Proceedings}, pages
+  963--968, 2011.
+
+\bibitem[HFF09]{Hedborg2009}
+Johan Hedborg, Pe~Forss{\'{e}}n, and Michael Felsberg.
+\newblock {Fast and accurate structure and motion estimation}.
+\newblock {\em 5th International Symposium on Advances in Visual Computing:
+  Part I}, pages 211--222, 2009.
+
+\bibitem[Hor87]{Horn1987}
+Berthold K~P Horn.
+\newblock {Closed-form solution of absolute orientation using unit
+  quaternions}.
+\newblock {\em Journal of the Optical Society of America A}, 4(4):629, 1987.
+
+\bibitem[HP87]{Harris1987}
+C~G Harris and J~M Pike.
+\newblock {3D Positional Integration from Image Sequences}.
+\newblock {\em Procedings of the Alvey Vision Conference 1987}, pages 233--236,
+  1987.
+
+\bibitem[HS88]{Harris1988}
+Chris Harris and Mike Stephens.
+\newblock {A Combined Corner and Edge Detector}.
+\newblock {\em Procedings of the Alvey Vision Conference 1988}, pages 147--151,
+  1988.
+
+\bibitem[HS97]{hochreiter1997long}
+Sepp Hochreiter and J{\"u}rgen Schmidhuber.
+\newblock Long short-term memory.
+\newblock {\em Neural computation}, 9(8):1735--1780, 1997.
+
+\bibitem[HZ04]{Hartley2004}
+R.~I. Hartley and A.~Zisserman.
+\newblock {\em Multiple View Geometry in Computer Vision}.
+\newblock Cambridge University Press, ISBN: 0521540518, second edition, 2004.
+
+\bibitem[HZRS14]{he2014spatial}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Spatial pyramid pooling in deep convolutional networks for visual
+  recognition.
+\newblock In {\em European Conference on Computer Vision}, pages 346--361.
+  Springer, 2014.
+
+\bibitem[JSD{\etalchar{+}}14]{jia2014caffe}
+Yangqing Jia, Evan Shelhamer, Jeff Donahue, Sergey Karayev, Jonathan Long, Ross
+  Girshick, Sergio Guadarrama, and Trevor Darrell.
+\newblock Caffe: Convolutional architecture for fast feature embedding.
+\newblock {\em arXiv preprint arXiv:1408.5093}, 2014.
+
+\bibitem[KAS10]{Konolige2010}
+Kurt Konolige, Motilal Agrawal, and Joan Sol{\`{a}}.
+\newblock {Large-scale visual odometry for rough terrain}.
+\newblock {\em Springer Tracts in Advanced Robotics}, 66(STAR):201--212, 2010.
+
+\bibitem[Kle07]{Klein2007}
+{Parallel tracking and mapping for small AR workspaces}.
+\newblock {\em 2007 6th IEEE and ACM International Symposium on Mixed and
+  Augmented Reality, ISMAR}, 2007.
+
+\bibitem[KRD08]{Kaess2008}
+Michael Kaess, Ananth Ranganathan, and Frank Dellaert.
+\newblock {iSAM: Incremental smoothing and mapping}.
+\newblock 24(6):1365--1378, 2008.
+
+\bibitem[KSH12]{krizhevsky2012imagenet}
+Alex Krizhevsky, Ilya Sutskever, and Geoffrey~E Hinton.
+\newblock Imagenet classification with deep convolutional neural networks.
+\newblock In {\em Advances in neural information processing systems}, pages
+  1097--1105, 2012.
+
+\bibitem[KSS11]{Kneip1991}
+Laurent Kneip, Davide Scaramuzza, and Roland Siegwart.
+\newblock {A novel parametrization of the perspective-three-point problem for a
+  direct computation of absolute camera position and orientation}.
+\newblock {\em Proceedings of the IEEE Computer Society Conference on Computer
+  Vision and Pattern Recognition}, pages 2969--2976, 2011.
+
+\bibitem[Low04]{Lowe2004}
+David~G Lowe.
+\newblock {Distinctive image features from scale invariant keypoints}.
+\newblock {\em Int'l Journal of Computer Vision}, 60:91--11020042, 2004.
+
+\bibitem[LSLR16]{liu2016learning}
+Fayao Liu, Chunhua Shen, Guosheng Lin, and Ian Reid.
+\newblock Learning depth from single monocular images using deep convolutional
+  neural fields.
+\newblock {\em IEEE transactions on pattern analysis and machine intelligence},
+  38(10):2024--2039, 2016.
+
+\bibitem[Mor80]{Moravec1980}
+Hans~Peter Moravec.
+\newblock {Obstacle avoidance and navigation in the real world by a seeing
+  robot rover.}
+\newblock {\em tech. report CMU-RI-TR-80-03}, page 175, 1980.
+
+\bibitem[MS06]{Milella2006}
+Annalisa Milella and Roland Siegwart.
+\newblock {Stereo-based ego-motion estimation using pixel tracking and
+  iterative closest point}.
+\newblock {\em Proceedings of the Fourth IEEE International Conference on
+  Computer Vision Systems, ICVS'06}, 2006(Icvs):21, 2006.
+
+\bibitem[NDL{\etalchar{+}}05]{ning2005toward}
+Feng Ning, Damien Delhomme, Yann LeCun, Fabio Piano, L{\'e}on Bottou, and
+  Paolo~Emilio Barbano.
+\newblock Toward automatic phenotyping of developing embryos from videos.
+\newblock {\em IEEE Transactions on Image Processing}, 14(9):1360--1371, 2005.
+
+\bibitem[Nis]{Nister2004}
+
+
+\bibitem[NLD11]{Newcombe2011}
+R~A Newcombe, S~J Lovegrove, and A~J Davison.
+\newblock {{\{}DTAM{\}}: Dense Tracking and Mapping in Real-Time}.
+\newblock {\em Int. Conf. on Computer Vision (ICCV)}, pages 2320--2327, 2011.
+
+\bibitem[OMSM03]{Olson2003}
+Clark~F. Olson, Larry~H. Matthies, Marcel Schoppers, and Mark~W. Maimone.
+\newblock {Rover navigation using stereo ego-motion}.
+\newblock {\em Robotics and Autonomous Systems}, 43(4):215--229, 2003.
+
+\bibitem[PPFM15]{Persson2015}
+Mikael Persson, Tommaso Piccini, Michael Felsberg, and Rudolf Mester.
+\newblock {Robust stereo visual odometry from monocular techniques}.
+\newblock {\em IEEE Intelligent Vehicles Symposium, Proceedings},
+  2015-Augus:686--691, 2015.
+
+\bibitem[RD06]{Rosten2006}
+Edward Rosten and Tom Drummond.
+\newblock {Machine learning for high-speed corner detection}.
+\newblock {\em Lecture Notes in Computer Science (including subseries Lecture
+  Notes in Artificial Intelligence and Lecture Notes in Bioinformatics)}, 3951
+  LNCS:430--443, 2006.
+
+\bibitem[SEZ{\etalchar{+}}13]{sermanet2013overfeat}
+Pierre Sermanet, David Eigen, Xiang Zhang, Micha{\"e}l Mathieu, Rob Fergus, and
+  Yann LeCun.
+\newblock Overfeat: Integrated recognition, localization and detection using
+  convolutional networks.
+\newblock {\em arXiv preprint arXiv:1312.6229}, 2013.
+
+\bibitem[SF11]{Scaramuzza2011}
+Davide Scaramuzza and Friedrich Fraundorfer.
+\newblock {Visual Odometry}.
+\newblock (June), 2011.
+
+\bibitem[SFPS09]{scaramuzza2009absolute}
+Davide Scaramuzza, Friedrich Fraundorfer, Marc Pollefeys, and Roland Siegwart.
+\newblock Absolute scale in structure from motion from a single vehicle mounted
+  camera by exploiting nonholonomic constraints.
+\newblock In {\em 2009 IEEE 12th International Conference on Computer Vision},
+  pages 1413--1419. IEEE, 2009.
+
+\bibitem[SG]{Song}
+Shiyu Song and Clark~C Guest.
+\newblock {Parallel , Real-Time Monocular Visual Odometry}.
+
+\bibitem[SLJ{\etalchar{+}}15]{szegedy2015going}
+Christian Szegedy, Wei Liu, Yangqing Jia, Pierre Sermanet, Scott Reed, Dragomir
+  Anguelov, Dumitru Erhan, Vincent Vanhoucke, and Andrew Rabinovich.
+\newblock Going deeper with convolutions.
+\newblock In {\em Proceedings of the IEEE conference on computer vision and
+  pattern recognition}, pages 1--9, 2015.
+
+\bibitem[ST94]{Shi1994}
+Jianbo Shi~Jianbo Shi and Carlo Tomasi.
+\newblock {Good features to track}.
+\newblock {\em Computer Vision and Pattern Recognition, 1994. Proceedings CVPR
+  '94., 1994 IEEE Computer Society Conference on}, (December):593--600, 1994.
+
+\bibitem[SZ14]{simonyan2014very}
+Karen Simonyan and Andrew Zisserman.
+\newblock Very deep convolutional networks for large-scale image recognition.
+\newblock {\em arXiv preprint arXiv:1409.1556}, 2014.
+
+\bibitem[TMHF00]{Triggs2000}
+Bill Triggs, Philip~F. Mclauchlan, Richard~I. Hartley, and Andrew~W.
+  Fitzgibbon.
+\newblock {Bundle Adjustment - a Modern Synthesis}.
+\newblock {\em Vision algorithms: theory and practice. S}, 34099:298--372,
+  2000.
+
+\bibitem[ZDL16]{zhou2016reliable}
+Dingfu Zhou, Yuchao Dai, and Hongdong Li.
+\newblock Reliable scale estimation and correction for monocular visual
+  odometry.
+\newblock In {\em Intelligent Vehicles Symposium (IV), 2016 IEEE}, pages
+  490--495. IEEE, 2016.
+
+\bibitem[ZF13]{DBLP:journals/corr/ZeilerF13}
+Matthew~D. Zeiler and Rob Fergus.
+\newblock Visualizing and understanding convolutional networks.
+\newblock {\em CoRR}, abs/1311.2901, 2013.
+
+\end{thebibliography}

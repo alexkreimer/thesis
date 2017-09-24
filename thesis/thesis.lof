@@ -1,0 +1,16 @@
+\select@language {english}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {\@@number {2.1}}{\ignorespaces (Adapted from~\cite {Hartley2004}) The effect of the camera motion on the image points may be viewed as a two-step process: mapping by a homography $\mathrm {H_\infty }$ followed by a motion along the corresponding epipolar lines.\relax }}{7}{figure.caption.26}
+\contentsline {figure}{\numberline {\@@number {2.2}}{\ignorespaces (Adapted from~\cite {Hartley2004}) The homography $H_\pi $ transfers the point onto a corresponding epipolar line. The displacement along the epipolar line depends on the inverse depth of the point and the camera translation magnitude.\relax }}{8}{figure.caption.32}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {\@@number {3.1}}{\ignorespaces ZF network data flow. Each rectangle depicts a top blob for a corresponding layer.\relax }}{19}{figure.caption.79}
+\contentsline {figure}{\numberline {\@@number {3.2}}{\ignorespaces RNN\relax }}{20}{figure.caption.83}
+\contentsline {figure}{\numberline {\@@number {3.3}}{\ignorespaces An unrolled RNN\relax }}{20}{figure.caption.84}
+\contentsline {figure}{\numberline {\@@number {3.4}}{\ignorespaces Long Short Term Memory\relax }}{21}{figure.caption.85}
+\contentsline {figure}{\numberline {\@@number {3.5}}{\ignorespaces A notation used in Figure~\ref {fig:lstm1}\relax }}{21}{figure.caption.86}
+\contentsline {figure}{\numberline {\@@number {3.6}}{\ignorespaces The train set\relax }}{22}{figure.caption.89}
+\contentsline {figure}{\numberline {\@@number {3.7}}{\ignorespaces Scale distributions\relax }}{22}{figure.caption.89}
+\contentsline {figure}{\numberline {\@@number {3.8}}{\ignorespaces Typical corner extraction and matching. Figure~\subref {fig:ex_corner_and_matching:corner} shows the raw extracted corners, while Figure~\subref {fig:ex_corner_and_matching:match} shows pruned and matched corners.\relax }}{22}{figure.caption.92}
+\contentsline {figure}{\numberline {\@@number {3.9}}{\ignorespaces Average feature vectors for samples centered around the specific camera translation magnitude. Each peak corresponds to a grid cell (e.g. here the grid is 4 rows by 6 columns by 300 bins, so the feature vector is of the dimension 6*4*300=7200). The grid is sampled in a column-major mode. So the first four peaks correspond to the leftmost column of the image grid.\relax }}{23}{figure.caption.93}
+\addvspace {10\p@ }
