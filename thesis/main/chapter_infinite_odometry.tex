@@ -86,7 +86,7 @@ along a corresponding epipolar line:
 \mathbf{x}' = \mathbf{x}+ \mathrm{K'}\mathbf{t}/Z = \mathbf{x}+\mathbf{e}'/Z.
 \end{equation}
 
-If $\mathbf{t} = \mathbf{0}$ the motion of the point may be represented by a homology:
+If $\mathbf{t} = \mathbf{0}$ the motion of the point may be represented by a homography:
 \begin{equation}
 \mathbf{x}' = \mathrm{H_\infty}\mathbf{x}.
 \end{equation}
@@ -103,10 +103,10 @@ If $\mathbf{t} = \mathbf{0}$ the motion of the point may be represented by a hom
 
 In a general case the mapping of an image point $\mathbf{x}$ into
 $\mathbf{x}'$ may be viewed as a two step process: transformation by a
-homology (a specialization of homography which has two equal
-eigenvalues) $\mathrm{H_\infty}$ which simulates a pure rotational
-motion of the camera followed by an offset along the epipolar line
-which simulates a pure translational motion of the camera, see Figure~\ref{fig:two_step_motion}.
+homography which simulates a pure rotational motion of the camera
+followed by an offset along the epipolar line which simulates a pure
+translational motion of the camera, see
+Figure~\ref{fig:two_step_motion}.
 
 \section{Motion Estimation}\label{sec:moest}
 
@@ -128,7 +128,7 @@ different technique.
 \paragraph{Partitioning the points} To partition the points in the
 stereo case we hard-threshold their $Z$-coordinates (the threshold is
 a parameter of the algorithm).  The depth of the points was computed
-by a stereo triangulation.
+by stereo triangulation.
 
 \paragraph{Rotation Estimation:}\label{sec:rotation_estimation}
 We use distant points to estimate rotation $\mathrm{R}$ (i.e., near-by
@@ -144,7 +144,7 @@ as a two-step process (the order is not important): transformation by
 homography $\mathrm{H_\infty} = \mathrm{KRK^{-1}}$ followed by
 displacement along the line defined by the epipole $e'$ and the point
 $\mathrm{H_\infty}\mathbf{x}$.  The magnitude of the displacement
-along the epipolar line depends on the the camera translation and the
+along the epipolar line depends on the camera translation and the
 inverse depth of the point, see Figure~\ref{fig:feature_motion}.
 
 \begin{figure}[h]
@@ -414,7 +414,7 @@ information and the motion estimation was done as explained in the
 Section~\ref{sec:mono_moest}.
 
 \section{Conclusions and Discussion}
-This paper presents a novel visual odometry algorithm.  The novelty of
+This work presents a novel visual odometry algorithm.  The novelty of
 the algorithm is in its rotation estimation method.  The rotation is
 estimated by means of the infinite homography.  The algorithm may be
 used both in the stereo and in the monocular setting.

@@ -76,7 +76,7 @@ the environment and make sure that motion estimates are globally
 consistent with this map, while local methods do not.  Some local
 methods~\cite{Badino2013} also keep track of a (local) map, but the
 underlying philosophy is different: global vs local.  Global methods
-usually more accurate since they make use of a vast amount of
+are usually more accurate since they make use of a vast amount of
 information (which, of course, comes at a computational price).  Note
 that accuracy does not imply robustness, since outliers that made
 their way into the map may greatly skew subsequent pose estimates.
@@ -93,6 +93,15 @@ to scale, while in stereo all six motion parameters may be
 recovered. An additional advantage of the stereo setup is that more
 information is available at each step, which may be one of the reasons
 why stereo algorithms perform better.
+
+The rest of this document is organized in two chapters.  The first
+chapter presents a novel algorithm for monocular odometry.  We begin
+with preliminaries and notation, proceed to the description of the
+algorithm in stereo and in mono and conclude with experimental
+results.  The second chapter presents statistical machine learning
+approaches to estimate the absolute scale of a single camera.  We
+begin with preliminaries and then go on to descibe our specific
+models.  We conclude with experimental results.
 
 %%% Local Variables:
 %%% mode: latex

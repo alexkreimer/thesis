@@ -28,7 +28,7 @@ e.g.,~\cite{scaramuzza2009absolute}.  The authors assume that the
 vehicle adheres to the Ackerman steering principle and exploit the
 non-holomicity of the vehicle motion, to compute the exact scale of
 the camera motion.  Other works make assumptions about the scene
-(e.g., a presense of the planar surface in front of the vehicle) and
+(e.g., a presence of the planar surface in front of the vehicle) and
 the height of the camera, e.g.~\cite{zhou2016reliable}, where the
 authors estimate the ground plane homography that relates subsequent
 images.  The motion scale is estimated/refined based on the homography
@@ -36,7 +36,7 @@ that relates the ground plane in subsequent images.
 \paragraph{Learning methods} We are not aware of works that learn the
 scale, rather there are a number of methods that use machine learning
 approaches to tackle the visual odometry.  One such work
-is~\cite{wang2017deepvo} that trains LSTM to predict the full 6-dof
+is~\cite{wang2017deepvo} that trains LSTM to predict the full 6-DOF
 motion of the camera over sequences of
 images. In~\cite{muller20017flowdometry} the authors use optical flow
 images as CNN input to learn and infer camera motion. Authors
@@ -113,24 +113,23 @@ We seek such $j$ and $s$ that minimize the equation:
 Where $y_{R_1}, y_{R_2}$ are the average responses of the samples in
 $R_1(j,s), R_2(j,s)$ respectively.  Once we found the $j$ and $s$ we
 recursively split each sub-tree in a similar manner.  The process is
-repeated until stopping criterion (e.g., number of nodes in the leaf)
-is reached.
+repeated until a stopping criterion (e.g., number of nodes in the
+leaf) is reached.
 
 \subsection{Bagging}
-The decision trees tend to suffer from \textit{high variance}. This
-means that if we split the training set into a number of random
-subsets and fit random tree into each sub-sample, we would likely to
-get much different answers from these trees when asked the same
-question.  It is known that the variance of a mean of a set of
-independent random variables is $\frac{1}{n}$.  Thus, in order to
-improve the variance of the estimator, it is possible to fit $n$
-estimators, each to its training-set and the average their
-predictions.  Since, usually, we don't have $n$ training sets, we
-would use \textit{bootstrapping} (e.g., sample independently with
-replacement from the data set).
+Decision trees tend to suffer from \textit{high variance}. This means
+that if we split the training set into a number of random subsets and
+fit random tree into each sub-sample, we would likely to get much
+different answers from these trees when asked the same question.  It
+is known that the variance of a mean of a set of independent random
+variables is $\frac{1}{n}$.  Thus, in order to improve the variance of
+the estimator, it is possible to fit $n$ estimators, each to its
+training-set and the average their predictions.  Since, usually, we
+don't have $n$ training sets, we would use \textit{bootstrapping}
+(e.g., sample independently with replacement from the data set).
 
 \subsection{Random Forest}
-Random forest suggest additional improvement over bagging, by
+The random forest suggests an additional improvement over bagging, by
 decorrelating the random trees.  The issue they attempt to address is
 this: lets say there is a very dominant feature w.r.t. to task at hand
 for a given data-set.  Bagging ensures that we use different training
@@ -154,8 +153,8 @@ tasks, such as semantic segmentation
 a single image ~\cite{liu2016learning}, optical flow
 estimation~\cite{fischer2015flownet}.
 
-Network architecture is a choice that needs to be made a-priori.  To
-best of our knowlegde, there is no clear guideline on how to choose a
+Network architecture is a choice that needs to be made a priori.  To
+best of our knowledge, there is no clear guideline on how to choose a
 network architecture for a new task.  We experiment with two network architectures:
 
 \begin{itemize}
@@ -169,12 +168,12 @@ network architecture for a new task.  We experiment with two network architectur
 
 The input to our network is a pair of subsequent images.  A decision
 to make is how to input the images into the network.  There are two
-common choices: either create two siameze branches, so that each gets
-its own input image, or to create a single multichannel image.
+common choices: either create two siamese branches, so that each gets
+its own input image, or to create a single multi-channel image.
 ~\cite{fischer2015flownet} show that the latter works equally well
 while being simpler, so we choose to concatenate the images along the
 channel dimension to produce a single 6-channel (for color) or
-2-channel (for grayscale) image.
+2-channel (for gray-scale) image.
 
 \subsection{ZF}
 
@@ -183,7 +182,7 @@ The network architecture consists of five convolutional and three fully connecte
 \begin{table}[ht]
   \begin{tabular}{lcccc}
     \toprule
-    \textbf{Layer} & \textbf{Receptive Fied Size} & \textbf{Padding} & \textbf{Stride} & \textbf{Number of Channels}\\
+    \textbf{Layer} & \textbf{Receptive Field Size} & \textbf{Padding} & \textbf{Stride} & \textbf{Number of Channels}\\
     \midrule
     conv1&  $7\times 7$& 2& 3&   96\\
     conv2&  $5\times 5$& 2& 2&  256\\
@@ -256,13 +255,13 @@ known to train better and have less parameters vs. their fully
 connected counterparts~\cite{long2015fully}. The geometry of the
 network is described in Table~\ref{tab:flownet_geometry}. Each
 convolutional layer is followed by the non-linearity.  We chose this
-architecture since it proved successfull for optical flow estimation
+architecture since it proved successful for optical flow estimation
 task and has pre-trained model readily available.
 
 \begin{table}[ht]
   \begin{tabular}{lcccc}
     \toprule
-    \textbf{Layer} & \textbf{Receptive Fied Size} & \textbf{Padding} & \textbf{Stride} & \textbf{Number of Channels}\\
+    \textbf{Layer} & \textbf{Receptive Field Size} & \textbf{Padding} & \textbf{Stride} & \textbf{Number of Channels}\\
     \midrule
     conv1&   $7\times 7$& 3& 2&   64\\
     conv2&   $5\times 5$& 2& 2&  128\\
@@ -277,7 +276,7 @@ task and has pre-trained model readily available.
     conv7&   $3\times 3$& 1& 2&    1\\
     \hline
   \end{tabular}
-  \caption{Geometry of the flownet based network}
+  \caption{Geometry of the FlowNet based network}
   \label{tab:flownet_geometry}
 \end{table}
 
@@ -322,7 +321,7 @@ task and has pre-trained model readily available.
 \node[font=\tiny, rotate=90] at (13.25, 1.5) {scale $1\times 1\times 1$};
 \end{tikzpicture}
 
-We use Eucledian loss to train the network. The total number of
+We use Euclidean loss to train the network. The total number of
 parameters is 24 million.
 
 \section{Recurrent Neural Networks}
@@ -500,12 +499,12 @@ meters.
 
 We use Caffe~\cite{jia2014caffe} framework to train and test our
 models.
-\paragraph{ZF} We train using vanilla SGD for 100 epochos and decrease
+\paragraph{ZF} We train using vanilla SGD for 100 epochs and decrease
 learning rate by factor of .1 every 10 epochs. We train the network
 from scratch.
-\paragraph{Flownet} We also train using vanilla SGD for 100 epochs
+\paragraph{FlowNet} We also train using vanilla SGD for 100 epochs
 decreasing learning rate by .1 every 10 epochs.  We start from
-pre-trained weigts of~\cite{fischer2015flownet}.
+pre-trained weights of~\cite{fischer2015flownet}.
 \paragraph{LSTM} TBD
 
 \section{Results}
@@ -523,8 +522,8 @@ $\{\hat{y}_i\}_{i=0}^N$.  We report the mean absolute error:
     \hline
                         & Random Forest & ZF   & FlowNet & LSTM ZF \\
     \hline
-    \mu\quad[meters]        & .237          & .200 & \textbf{.103}    & .198 \\
-    \sigma\quad[meters]     & .229          & .161 & \textbf{.08}     & .147 \\    
+    $\mu\quad[meters]$        & .237          & .200 & \textbf{.103}    & .198 \\
+    $\sigma\quad[meters]$     & .229          & .161 & \textbf{.08}     & .147 \\    
     \hline
   \end{tabular}
   \caption{Experimental Results}
