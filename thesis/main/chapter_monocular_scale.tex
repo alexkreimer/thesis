@@ -8,40 +8,71 @@ problem. It arises in various practical contexts
 navigation, etc.).  The problem was studied in both stereo and the
 monocular setups.  To recover the full 6-DOF motion, the previous
 works resorted to the stereo setup, used auxiliary sensors (e.g. IMU)
-or made assumptions about the camera pose and the scene.  All of these
-have their drawbacks: stereo pairs are fragile and require careful
-calibration procedures, additional sensors are not always available
-and also require calibration, scene assumptions don't always hold.
-Motion estimation from images of a single moving camera is probably
-the hardest setup, as well as the most desirable one, because of its
+or rely on the planar motion assumption.  All of these have their
+drawbacks: stereo pairs are fragile and require careful calibration
+procedures, additional sensors are not always available and also
+require calibration, scene assumptions don't always hold.  Motion
+estimation from images of a single moving camera is probably the
+hardest setup, as well as the most desirable one, because of its
 simplicity.  It is well known that the translation scale parameter is
 not directly observable for a motion of a single camera.
 
 We argue, that for natural scenes the scale information is present in
-the images and may be extracted.  Our method learns a regressor, that
-is capable to prediction the motion scale.
+the images (see e.g.~\ref{fig:feature_vectors}).  We propose to apply
+statistical machine learning techniques to learn the monocular scale.
+In the following chapters we present an overview of the existing works
+in the field, describe our method and present the experimental
+results.
 
 \section{Related work}
 \paragraph{Geometry based methods} One category of works proceed by
-making assumptions on the camera motion,
-e.g.,~\cite{scaramuzza2009absolute}.  The authors assume that the
-vehicle adheres to the Ackerman steering principle and exploit the
-non-holomicity of the vehicle motion, to compute the exact scale of
-the camera motion.  Other works make assumptions about the scene
-(e.g., a presence of the planar surface in front of the vehicle) and
-the height of the camera, e.g.~\cite{zhou2016reliable}, where the
-authors estimate the ground plane homography that relates subsequent
-images.  The motion scale is estimated/refined based on the homography
-that relates the ground plane in subsequent images.
-\paragraph{Learning methods} We are not aware of works that learn the
-scale, rather there are a number of methods that use machine learning
-approaches to tackle the visual odometry.  One such work
-is~\cite{wang2017deepvo} that trains LSTM to predict the full 6-DOF
-motion of the camera over sequences of
-images. In~\cite{muller20017flowdometry} the authors use optical flow
-images as CNN input to learn and infer camera motion. Authors
-in~\cite{DBLP:journals/corr/MohantyADGSC16} also propose to train a
-CNN.
+making assumptions on the camera motion. In~\cite{gutierrez2012full}
+the authors assume head-mounted camera and relate the vertical camera
+oscilation frequence to the step length and, subsequently, to person
+height, which allows full 6DOF motion
+estimation. ~\cite{scaramuzza2009absolute} assumes that the vehicle
+adheres to the Ackerman steering principle and exploit the
+non-holomicity of its motion, to compute the scale.  Another family of
+works make planar vehicle motion assumption and assume that the height
+of the camera is known.  These works assume that the images are taken
+by a camera, rigidly mounted on the car that drives on a flat
+road. Usually, they contain a number of similar steps: begin by
+defining a region of interest (the planar road surface), proceed by
+matching features in this ROI and estimating the ground plane
+homography that relates subsequent images and then refine the results
+by means of non-linear optimization step.  ~\cite{zhou2016reliable}
+contribute a divide-and-conquer approach, where they decompose the
+ground plane homography into the structure and the motion parameters.
+Their optimization step is based on this division.
+~\cite{kitt2011monocular} take a more SLAM-like approach by collecting
+and keeping track of a constand number of ground-plane features which
+they use to refine the scale.  ~\cite{grater2015robust} complement the
+ground plane estimation based on the structure from motion techniques
+with vanishing point estimation which renders the algorithm robust in
+urban scenarios. ~\cite{7995955} considers both dense and sparse cues
+for ground plane estimation, this makes their method robust toward
+varying availability and distribution of trackable ground structure.
+They parameterize and optimize over the motion parameters directly,
+instead of optimizing the ground plane homography.  Furthermore they
+use classifiers based on e.g., moments and residuals to reject scale
+outliers.  This work seems to achieve best known results of monocular
+scale estimation.  We compare against their results.
+
+
+\paragraph{Learning methods} We are not aware of works that directly
+learn the monocular scale. Yet there are a number of works that use
+machine learning approaches to solve the 6DOF visual odometry.
+Optical flow is used to train k-nearest neighbour, gaussian processes
+and support vector machines in ~\cite{roberts2008memory},
+~\cite{guizilini2013semi}, ~\cite{CIARFUGLIA20141717}
+respectively. ~\cite{wang2017deepvo} shows that visual odometry may be
+addressed in the end-to-end fashion, using the deep learning
+techniques, the authors use CNN to learn the geometric feature
+representation and the recurent neural networks to model sequential
+motion dynamics. In~\cite{muller2017flowdometry} the authors use
+optical flow images as CNN input to learn and infer camera
+motion. Authors in~\cite{DBLP:journals/corr/MohantyADGSC16} also
+propose to train a CNN.
 
 
 
@@ -88,10 +119,10 @@ Building a decision tree may be described by a two step procedure:
 
 The regions $R_i$ are usually chosen to be multidimensional boxes (axis aligned).  We would like to find such a partition of the feature space that minimizes
 \begin{equation}\label{eq:tree_objective}
-\sum\limits_{j=1}^J\sum_{x\in R_j}{(x-\mean{x}_j)^2}
+\sum\limits_{j=1}^J\sum_{x\in R_j}{(x-\mean{y}_j)^2}
 \end{equation}
 
-Where $\mean{x}_j$ denotes the mean of the response values of the
+Where $y_j$ denotes the mean of the response values of the
 samples in region $R_j$.  Unfortunately, solving the optimization
 problem~\ref{eq:tree_objective} is computationally hard.  Usually it
 is replaced with a greedy algorithm, called \textit{recursive binary
@@ -107,7 +138,7 @@ define the hyper-planes:
 We seek such $j$ and $s$ that minimize the equation:
 
 \begin{equation}
-  \sum\limits_{i:x_i\in R_1(j,s)}{(y_i-\hat{y}_{R_1})}^2 + \sum\limits_{i:x_i\in R_2(j,s)}{(y_i-\hat{y}_{R_2})}^2,
+  \sum\limits_{i:x_i\in R_1(j,s)}{(x_i-y_{R_1})}^2 + \sum\limits_{i:x_i\in R_2(j,s)}{(x_i-y_{R_2})}^2,
 \end{equation}
 
 Where $y_{R_1}, y_{R_2}$ are the average responses of the samples in
@@ -199,45 +230,42 @@ The network architecture consists of five convolutional and three fully connecte
 
 The flow of data through the network
 \begin{figure}
-\begin{tikzpicture}
-\draw[fill=cyan] (1.0, 0) rectangle (1.5, 3.0);
-\draw[->, thick, purple] (1.5, 1.5) --(2.0, 1.5);
-\node[font=\tiny, rotate=90] at (1.25, 1.5) {data $6\times 376\times 1241$};
-\draw[fill=orange] (2.0, 0) rectangle (2.5, 3.0);
-\draw[->, thick, purple] (2.5, 1.5) --(3.0, 1.5);
-\node[font=\tiny, rotate=90] at (2.25, 1.5) {conv1 $96\times 125\times 413$};
-\draw[fill=orange] (3.0, 0) rectangle (3.5, 3.0);
-\draw[->, thick, purple] (3.5, 1.5) --(4.0, 1.5);
-\node[font=\tiny, rotate=90] at (3.25, 1.5) {norm1 $96\times 125\times 413$};
-\draw[fill=orange] (4.0, 0) rectangle (4.5, 3.0);
-\draw[->, thick, purple] (4.5, 1.5) --(5.0, 1.5);
-\node[font=\tiny, rotate=90] at (4.25, 1.5) {pool1 $96\times 63\times 207$};
-\draw[fill=orange] (5.0, 0) rectangle (5.5, 3.0);
-\draw[->, thick, purple] (5.5, 1.5) --(6.0, 1.5);
-\node[font=\tiny, rotate=90] at (5.25, 1.5) {conv2 $256\times 30\times 102$};
-\draw[fill=orange] (6.0, 0) rectangle (6.5, 3.0);
-\draw[->, thick, purple] (6.5, 1.5) --(7.0, 1.5);
-\node[font=\tiny, rotate=90] at (6.25, 1.5) {norm2 $256\times 30\times 102$};
-\draw[fill=orange] (7.0, 0) rectangle (7.5, 3.0);
-\draw[->, thick, purple] (7.5, 1.5) --(8.0, 1.5);
-\node[font=\tiny, rotate=90] at (7.25, 1.5) {pool2 $256\times 16\times 52$};
-\draw[fill=orange] (8.0, 0) rectangle (8.5, 3.0);
-\draw[->, thick, purple] (8.5, 1.5) --(9.0, 1.5);
-\node[font=\tiny, rotate=90] at (8.25, 1.5) {conv3 $384\times 14\times 50$};
-\draw[fill=orange] (9.0, 0) rectangle (9.5, 3.0);
-\draw[->, thick, purple] (9.5, 1.5) --(10.0, 1.5);
-\node[font=\tiny, rotate=90] at (9.25, 1.5) {conv4 $384\times 12\times 48$};
-\draw[fill=orange] (10.0, 0) rectangle (10.5, 3.0);
-\draw[->, thick, purple] (10.5, 1.5) --(11.0, 1.5);
-\node[font=\tiny, rotate=90] at (10.25, 1.5) {conv5 $256\times 12\times 48$};
-\draw[fill=orange] (11.0, 0) rectangle (11.5, 3.0);
-\draw[->, thick, purple] (11.5, 1.5) --(12.0, 1.5);
-\node[font=\tiny, rotate=90] at (11.25, 1.5) {fc6 $4096$};
-\draw[fill=orange] (12.0, 0) rectangle (12.5, 3.0);
-\draw[->, thick, purple] (12.5, 1.5) --(13.0, 1.5);
-\node[font=\tiny, rotate=90] at (12.25, 1.5) {fc7 $4096$};
-\draw[fill=orange] (13.0, 0) rectangle (13.5, 3.0);
-\node[font=\tiny, rotate=90] at (13.25, 1.5) {fc8 $1$};
+  \begin{tikzpicture}
+  [
+  data layer/.style={draw=cyan!75, fill=cyan!20, rectangle, minimum width=3cm, minimum height=1.5mm, font=\tiny, transform shape},
+  other layer/.style={draw=orange!75, fill=orange!20,rectangle, minimum width=3cm, minimum height=1.5mm, font=\tiny, transform shape},
+  text/.style={font=\tiny, rotate=90},
+  arrow/.style={->}
+  ]
+  \draw[rotate=90]
+  node[data layer] (dl) {data $6\times 376\times 1241$}
+  node[other layer] (l1) [below=.5cm of dl] {conv1 $96\times 125\times 413$}
+  node[other layer] (l2) [below=.5cm of l1] {norm1 $96\times 125\times 413$}
+  node[other layer] (l3) [below=.5cm of l2] {pool1 $96\times 63\times 207$}
+  node[other layer] (l4) [below=.5cm of l3] {conv2 $256\times 30\times 102$}
+  node[other layer] (l5) [below=.5cm of l4] {norm2 $256\times 30\times 102$}
+  node[other layer] (l6) [below=.5cm of l5] {pool2 $256\times 16\times 52$}
+  node[other layer] (l7) [below=.5cm of l6] {conv3 $384\times 14\times 50$}
+  node[other layer] (l8) [below=.5cm of l7] {conv4 $384\times 12\times 48$}
+  node[other layer] (l9) [below=.5cm of l8] {conv5 $256\times 12\times 48$}
+  node[other layer] (l10) [below=.5cm of l9] {fc6 $4096$}
+  node[other layer] (l11) [below=.5cm of l10] {fc7 $4096$}
+  node[other layer] (l12) [below=.5cm of l11] {fc8 $1$};
+  \draw[arrow] (dl) -- (l1);
+  \draw[arrow] (l1) -- (l2);
+  \draw[arrow] (l2) -- (l3);
+  \draw[arrow] (l3) -- (l4);
+  \draw[arrow] (l4) -- (l5);
+  \draw[arrow] (l5) -- (l6);  
+  \draw[arrow] (l6) -- (l7);
+  \draw[arrow] (l7) -- (l8);  
+  \draw[arrow] (l8) -- (l9);
+  \draw[arrow] (l9) -- (l10);  
+  \draw[arrow] (l10) -- (l11);
+  \draw[arrow] (l11) -- (l12);
+  \begin{scope}[on background layer]
+    \node[rounded corners, fill=black!20, fit=(dl) (l12)] {};
+  \end{scope}
 \end{tikzpicture}
 \caption{ZF network data flow.  Each rectangle depicts a top blob for a corresponding layer.}
 \end{figure}
@@ -281,44 +309,43 @@ task and has pre-trained model readily available.
 \end{table}
 
 \begin{tikzpicture}
-\draw[fill=cyan] (1.0, 0) rectangle (1.5, 3.0);
-\draw[->, thick, purple] (1.5, 1.5) --(2.0, 1.5);
-\node[font=\tiny, rotate=90] at (1.25, 1.5) {data $6\times 376\times 1241$};
-\draw[fill=orange] (2.0, 0) rectangle (2.5, 3.0);
-\draw[->, thick, purple] (2.5, 1.5) --(3.0, 1.5);
-\node[font=\tiny, rotate=90] at (2.25, 1.5) {conv1 $64\times 188\times 621$};
-\draw[fill=orange] (3.0, 0) rectangle (3.5, 3.0);
-\draw[->, thick, purple] (3.5, 1.5) --(4.0, 1.5);
-\node[font=\tiny, rotate=90] at (3.25, 1.5) {conv2 $128\times 94\times 311$};
-\draw[fill=orange] (4.0, 0) rectangle (4.5, 3.0);
-\draw[->, thick, purple] (4.5, 1.5) --(5.0, 1.5);
-\node[font=\tiny, rotate=90] at (4.25, 1.5) {conv3 $256\times 47\times 156$};
-\draw[fill=orange] (5.0, 0) rectangle (5.5, 3.0);
-\draw[->, thick, purple] (5.5, 1.5) --(6.0, 1.5);
-\node[font=\tiny, rotate=90] at (5.25, 1.5) {conv3-1 $256\times 47\times 156$};
-\draw[fill=orange] (6.0, 0) rectangle (6.5, 3.0);
-\draw[->, thick, purple] (6.5, 1.5) --(7.0, 1.5);
-\node[font=\tiny, rotate=90] at (6.25, 1.5) {conv4 $512\times 24\times 78$};
-\draw[fill=orange] (7.0, 0) rectangle (7.5, 3.0);
-\draw[->, thick, purple] (7.5, 1.5) --(8.0, 1.5);
-\node[font=\tiny, rotate=90] at (7.25, 1.5) {conv4-1 $512\times 24\times 78$};
-\draw[fill=orange] (8.0, 0) rectangle (8.5, 3.0);
-\draw[->, thick, purple] (8.5, 1.5) --(9.0, 1.5);
-\node[font=\tiny, rotate=90] at (8.25, 1.5) {conv5 $512\times 12\times 39$};
-\draw[fill=orange] (9.0, 0) rectangle (9.5, 3.0);
-\draw[->, thick, purple] (9.5, 1.5) --(10.0, 1.5);
-\node[font=\tiny, rotate=90] at (9.25, 1.5) {conv5-1 $512\times 12\times 39$};
-\draw[fill=orange] (10.0, 0) rectangle (10.5, 3.0);
-\draw[->, thick, purple] (10.5, 1.5) --(11.0, 1.5);
-\node[font=\tiny, rotate=90] at (10.25, 1.5) {conv6 $1024\times 6\times 20$};
-\draw[fill=orange] (11.0, 0) rectangle (11.5, 3.0);
-\draw[->, thick, purple] (11.5, 1.5) --(12.0, 1.5);
-\node[font=\tiny, rotate=90] at (11.25, 1.5) {conv6-1 $1024\times 6\times 20$};
-\draw[fill=orange] (12.0, 0) rectangle (12.5, 3.0);
-\draw[->, thick, purple] (12.5, 1.5) --(13.0, 1.5);
-\node[font=\tiny, rotate=90] at (12.25, 1.5) {conv7 $1\times 6\times 20$};
-\draw[fill=orange] (13.0, 0) rectangle (13.5, 3.0);
-\node[font=\tiny, rotate=90] at (13.25, 1.5) {scale $1\times 1\times 1$};
+  [
+  data layer/.style={draw=cyan!75, fill=cyan!20, rectangle, minimum width=3cm, minimum height=1.5mm, font=\tiny, transform shape},
+  other layer/.style={draw=orange!75, fill=orange!20,rectangle, minimum width=3cm, minimum height=1.5mm, font=\tiny, transform shape},
+  text/.style={font=\tiny, rotate=90},
+  arrow/.style={->}
+  ]
+  \draw[rotate=90]
+  node[data layer] (dl) {data $6\times 376\times 1241$}
+  node[other layer] (l1) [below=.5cm of dl] {data $6\times 376\times 1241$}
+  node[other layer] (l2) [below=.5cm of l1] {conv1 $64\times 188\times 621$}
+  node[other layer] (l3) [below=.5cm of l2] {conv2 $128\times 94\times 311$}
+  node[other layer] (l4) [below=.5cm of l3] {conv3 $256\times 47\times 156$}
+  node[other layer] (l5) [below=.5cm of l4] {conv3-1 $256\times 47\times 156$}
+  node[other layer] (l6) [below=.5cm of l5] {conv4 $512\times 24\times 78$}
+  node[other layer] (l7) [below=.5cm of l6] {conv4-1 $512\times 24\times 78$}
+  node[other layer] (l8) [below=.5cm of l7] {conv5 $512\times 12\times 39$}
+  node[other layer] (l9) [below=.5cm of l8] {conv5-1 $512\times 12\times 39$}
+  node[other layer] (l10) [below=.5cm of l9] {conv6 $1024\times 6\times 20$}
+  node[other layer] (l11) [below=.5cm of l10] {conv6-1 $1024\times 6\times 20$}
+  node[other layer] (l12) [below=.5cm of l11] {conv7 $1\times 6\times 20$}
+  node[other layer] (l13) [below=.5cm of l12] {scale $1\times 1\times 1$};
+  \draw[arrow] (dl) -- (l1);
+  \draw[arrow] (l1) -- (l2);
+  \draw[arrow] (l2) -- (l3);
+  \draw[arrow] (l3) -- (l4);
+  \draw[arrow] (l4) -- (l5);
+  \draw[arrow] (l5) -- (l6);  
+  \draw[arrow] (l6) -- (l7);
+  \draw[arrow] (l7) -- (l8);  
+  \draw[arrow] (l8) -- (l9);
+  \draw[arrow] (l9) -- (l10);  
+  \draw[arrow] (l10) -- (l11);
+  \draw[arrow] (l11) -- (l12);
+  \draw[arrow] (l12) -- (l13);
+  \begin{scope}[on background layer]
+    \node[rounded corners, fill=black!20, fit=(dl) (l13)] {};
+  \end{scope}
 \end{tikzpicture}
 
 We use Euclidean loss to train the network. The total number of
@@ -331,8 +358,26 @@ traditional neural networks are stateless, they are poorly suited for
 this purpose. Recurrent Neural Networks have loops in them, so that
 the information can persist.
 
-\begin{figure}[h!]
-  \centering \includegraphics[width=0.15\textwidth]{RNN-rolled}
+\begin{figure}[ht]
+  \centering
+  \begin{tikzpicture}
+    [
+    ->,
+    >=stealth',
+    auto,node distance=1.5cm,
+    thick,
+    main node/.style={circle, draw, font=\sffamily\large\bfseries},
+    rect node/.style={rectangle, draw, font=\sffamily\large\bfseries}
+    ]
+    \node[main node] (1) {$x_t$};
+    \node[rect node] (2) [above of=1, minimum width=1.5cm] {$A$};
+    \node[main node] (3) [above of=2] {$h_t$};
+    
+    \path[every node/.style={font=\sffamily\small}]
+    (1) edge node [right] {} (2)
+    (2) edge node [right] {} (3);
+    \path (2) edge [out=45,in=135,looseness=6] node[below] {} (2);
+  \end{tikzpicture}
   \caption{RNN}
   \label{fig:rnn1}  
 \end{figure}
@@ -348,9 +393,60 @@ Figure~\ref{fig:rnn2}.  Unrolled network stresses the relation of the
 RNN to the sequential data streams.  This is an architecture of choice
 when modeling such data.
 
-\begin{figure}[ht!]
-  \centering \includegraphics[width=.7\textwidth]{RNN-unrolled}
-  \caption{An unrolled RNN}\label{fig:rnn2}
+\begin{figure}[ht]
+  \centering
+  \begin{tikzpicture}
+    [
+    ->,
+    >=stealth',
+    auto,node distance=1.5cm,
+    thick,
+    main node/.style={circle, draw, font=\sffamily\large\bfseries},
+    rect node/.style={rectangle, draw, font=\sffamily\large\bfseries}
+    ]
+    \node[main node] (1) {$x_t$};
+    \node[rect node] (2) [above of=1, minimum width=1.5cm] {$A$};
+    \node[main node] (3) [above of=2] {$h_t$};
+    
+    \path[every node/.style={font=\sffamily\small}]
+    (1) edge node [right] {} (2)
+    (2) edge node [right] {} (3);
+    \path (2) edge [out=45,in=135,looseness=8] node[below] {} (2);
+    \node[main node] (4) [right = 2cm of 1] {$x_0$};
+    \node[rect node] (5) [above of=4, minimum width=1.5cm] {$A$};
+    \node[main node] (6) [above of=5] {$h_0$};
+    \path[every node/.style={font=\sffamily\small}]
+    (4) edge node [right] {} (5)
+    (5) edge node [right] {} (6);
+
+    \node[main node] (7) [right = 1cm of 4] {$x_1$};
+    \node[rect node] (8) [above of=7, minimum width=1.5cm] {$A$};
+    \node[main node] (9) [above of=8] {$h_1$};
+    \path[every node/.style={font=\sffamily\small}]
+    (7) edge node [right] {} (8)
+    (8) edge node [right] {} (9)
+    (5) edge node [right] {} (8);
+    \node (10) [right = .5 cm of 2] {=};
+    \node[main node] (11) [right = 1cm of 7] {$x_2$};
+    \node[rect node] (12) [above of=11, minimum width=1.5cm] {$A$};
+    \node[main node] (13) [above of=12] {$h_2$};
+    \path[every node/.style={font=\sffamily\small}]
+    (11) edge node [right] {} (12)
+    (12) edge node [right] {} (13)
+    (8) edge node [right] {} (12);
+    \node (14) [right = .2 cm of 12] {$\cdots$};
+    (15) edge node [right] {} (16)
+    (16) edge node [right] {} (17)
+    (17) edge node [right] {} (18);
+    \node[main node] (15) [right = 2cm of 11] {$x_t$};
+    \node[rect node] (16) [above of=15, minimum width=1.5cm] {$A$};
+    \node[main node] (17) [above of=16] {$h_t$};
+    \path[every node/.style={font=\sffamily\small}]
+    (15) edge node [right] {} (16)
+    (16) edge node [right] {} (17);
+  \end{tikzpicture}
+  \caption{Unrolled Recurrent Neural Network}
+  \label{fig:rnn2}
 \end{figure}
 
 It turns out that the vanilla RNN are hard to train due to the
@@ -362,6 +458,43 @@ specifically designed to model long term dependencies. Similarly to
 RNN, LSTM posses a chain-like structure. Each repeating node has an
 internal structure depicted in Figure~\ref{fig:lstm1}.
 
+The first step in LSTM is to decide what information we are going to
+make use of in the cell state $C_{t-1}$.  This is done by a sigmoid
+layer ``forget gate layer'', equation ~\ref{eq:forget gate}, that
+looks at the previous output $h_{t-1}$ and the current input $x_t$ and
+outputs a number in $[0,1]$ for every cell state component. $0$ means
+completely forget this component and $1$ means completely make use of
+it.
+\begin{equation}\label{eq:forget gate}
+  f_t = \sigma(W_f[h_{t-1}, x_t] + b_f)
+\end{equation}
+Next, LSTM makes a step toward the cell state update. The ``input gate
+layer'' outputs a number in $[0,1]$ for each cell state component
+(similarly to the forget gate, see equation~\ref{eq:input gate}) and
+the ``tanh'' layer computes a cell state update candidate vector
+(equation~\ref{eq:update candidate}):
+
+\begin{equation}\label{eq:input gate}
+  i_t = \sigma(W_i[h_{t-1},x_t] + b_i)
+\end{equation}
+\begin{equation}\label{eq:update candidate}
+  \tilde{C_t} = tanh(W_C[h_{t-1},x_t] + b_C)
+\end{equation}
+
+Cell state is updated by ``forgetting'' some of the information (as
+decided by the ``forget gate'') and by adding some new information
+(governed by the ``input gate'' and the ``tanh''):
+\begin{equation}
+  C_t = f_t*C_{t-1}+i_t*\tilde{C_t}
+\end{equation}
+Now LSTM decides on its output.  The output is based on the cell state
+\begin{equation}
+  o_t = \sigma(W_o[h_{t-1},x_t]+b_o)
+\end{equation}
+\begin{equation}
+  h_t = o_t*tanh(C_t)
+\end{equation}
+
 \begin{figure}[ht!]
   \centering \includegraphics[width=.7\textwidth]{LSTM3-chain}
   \caption{Long Short Term Memory}\label{fig:lstm1}
@@ -371,11 +504,60 @@ internal structure depicted in Figure~\ref{fig:lstm1}.
   \centering \includegraphics[width=.5\textwidth]{LSTM2-notation}
   \caption{A notation used in Figure~\ref{fig:lstm1}}\label{fig:lstm2}
 \end{figure}
+\begin{figure}[ht]
+  \centering
+  \begin{tikzpicture}
+    [
+    auto,node distance=1.5cm,
+    thick,
+    circ node/.style={circle, draw=black!75, minimum size=2mm, font=\tiny, },
+    rect node/.style={rectangle, draw=black!75, minimum size=2mm, font=\tiny},
+    ]
+    \node[rect node] (1) {$\sigma$};
+    \node[rect node] (2) [right=1cm of 1] {$\sigma$};
+    \node[rect node] (3) [right=1cm of 2]{$tanh$};
+    \node[rect node] (4) [right=1cm of 3] {$\sigma$};
+    \node[circ node] (5) [above=1.5cm of 1] {$\times$};
+    \node[circ node] (6) [above=.35cm of 3] {$\times$};
+    \node[circ node] (7) [above=1.5cm of 3] {+};
+    \node[circ node] (8) [below=1cm of 1] {$x_t$};
+    \node[circ node] (9) [right=2cm of 6] {$\times$};
+    \node (10) [rectangle, rounded corners=1ex, draw, above=.15cm of 9, font=\tiny, draw=black!75] {$tanh$};
+    \node (11) [right=4cm of 7] {$C_t$};
+    \node (15) [above=3.1mm of 8, inner sep=0mm] {};    
+    \node (12) [right=7cm of 15] {$h_t$};
+    \node (13) [left=1cm of 5] {$C_{t-1}$};
+    \node (14) [left=1cm of 15] {$h_{t-1}$};
+    \begin{scope}[->,decoration={post length=4pt},rounded corners=2mm]
+      \draw[--] (8) -- (1);
+      \draw (15) -- ++(.5cm, 0) -| (2.south);
+      \draw (15) -- ++(2cm, 0) -| (3.south);
+      \draw (15) -- ++(3cm, 0) -| (4.south);
+      \draw (1) -- (5);
+      \draw (5) -- (7);
+      \draw (3) -- (6);
+      \draw (2.north) -- ++(0,.35cm) |- (6.west);
+      \draw (6) -- (7);
+      \draw (7) -- (11);
+      \draw (4.north) -- ++(0,3.5mm) |- (9.west);
+      \draw (10) -- (9);
+      \draw (7) -| (10.north);
+      \draw (9.south) |- (12.west);
+      \draw (13) -- (5);
+      \draw (14) -- (15);
+    \end{scope}
+    \begin{scope}[on background layer]
+      \node[rounded corners, fill=black!20, fit=(2) (3) (4) (5) (6) (7) (9) (10) (15)] {};
+    \end{scope}
+  \end{tikzpicture}
+  \caption{LSTM Node}
+  \label{fig:lstm node}
+\end{figure}
 
-To use the LSTM for the image data we combine the convolutional
-network with the LSTM.  $X_t$ vectors are produced by the ZF convnet.
-This is a fairly common representation used previously.  The convnet
-and the LSTM are trained jointly.
+We combine the sequential strengths of the LSTM with convolutional
+networks to tackle our problem.  $x_t$ vectors are produced by a
+convolutional network.  This is a fairly common representation used
+previously.  The convnet and the LSTM are trained jointly.
 
 The geometry of the network is as follows:
 \begin{itemize}
