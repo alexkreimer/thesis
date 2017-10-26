@@ -25,39 +25,56 @@ in the field, describe our method and present the experimental
 results.
 
 \section{Related work}
-\paragraph{Geometry based methods} One category of works proceed by
-making assumptions on the camera motion. In~\cite{gutierrez2012full}
-the authors assume head-mounted camera and relate the vertical camera
-oscilation frequence to the step length and, subsequently, to person
-height, which allows full 6DOF motion
-estimation. ~\cite{scaramuzza2009absolute} assumes that the vehicle
-adheres to the Ackerman steering principle and exploit the
-non-holomicity of its motion, to compute the scale.  Another family of
-works make planar vehicle motion assumption and assume that the height
-of the camera is known.  These works assume that the images are taken
-by a camera, rigidly mounted on the car that drives on a flat
-road. Usually, they contain a number of similar steps: begin by
-defining a region of interest (the planar road surface), proceed by
-matching features in this ROI and estimating the ground plane
-homography that relates subsequent images and then refine the results
-by means of non-linear optimization step.  ~\cite{zhou2016reliable}
-contribute a divide-and-conquer approach, where they decompose the
-ground plane homography into the structure and the motion parameters.
-Their optimization step is based on this division.
-~\cite{kitt2011monocular} take a more SLAM-like approach by collecting
-and keeping track of a constand number of ground-plane features which
-they use to refine the scale.  ~\cite{grater2015robust} complement the
-ground plane estimation based on the structure from motion techniques
-with vanishing point estimation which renders the algorithm robust in
-urban scenarios. ~\cite{7995955} considers both dense and sparse cues
-for ground plane estimation, this makes their method robust toward
-varying availability and distribution of trackable ground structure.
-They parameterize and optimize over the motion parameters directly,
-instead of optimizing the ground plane homography.  Furthermore they
-use classifiers based on e.g., moments and residuals to reject scale
+\paragraph{Geometric methods} Previous geometric works in monocular
+scale estimation may roughly be divided into ground plane and
+non-ground plane methods.
+
+Ground plane methods rely on the following assumptions: camera hight
+(a distance from the camera principle center to the ground plane) is
+known to the method, a predefined region of the image (usually the one
+in front of the camera in the world) contains projections of the
+ground plane points, the ground is in front of the camera.  These
+assumptions allow to properly scale the camera motion vector.
+
+Ground planes in consecutive images are commonly related by a
+homography matrix. Homography matrix may be estimated from a set of
+sparse correspondences (e.g.,~\cite{song2014robust}) or from dense
+region matching as in (~\cite{7995955}).  Sparse correspondence method
+is sensitive both to outliers and to scarcity of features in the
+ground region.  Dense region methods tend to fail when the region
+deviates from being planar (especially in curb areas). Modern method
+to parameterize the homography through camera and plane parameters
+rather than plane matrix entries.  This allows to prevent homography
+decomposition step that introduces additional errors, see
+e.g.,~\cite{zhou2016reliable}, that contribute a divide-and-conquer
+approach, where they decompose the ground plane homography into the
+structure and the motion parameters.  Their optimization step is based
+on this division.  ~\cite{kitt2011monocular} take a more SLAM-like
+approach by collecting and keeping track of a constand number of
+ground-plane features which they use to refine the scale.
+~\cite{grater2015robust} complement the ground plane estimation based
+on the structure from motion techniques with vanishing point
+estimation which renders the algorithm robust in urban
+scenarios. ~\cite{7995955} considers both dense and sparse cues for
+ground plane estimation, this makes their method robust toward varying
+availability and distribution of trackable ground structure.  They
+parameterize and optimize over the motion parameters directly, instead
+of optimizing the ground plane homography.  Furthermore they use
+classifiers based on e.g., moments and residuals to reject scale
 outliers.  This work seems to achieve best known results of monocular
 scale estimation.  We compare against their results.
 
+The idea of using non-ground objects to estimate scale was explored
+by~\cite{song2014robust} and~\cite{frost2016}.  These works employ
+object size change as an additional cue to determine the correct scale.
+
+Another category of works proceed by making assumptions on the camera
+motion. In~\cite{gutierrez2012full} the authors assume head-mounted
+camera and relate the vertical camera oscilation frequence to the step
+length and, subsequently, to person height, which allows full 6DOF
+motion estimation. ~\cite{scaramuzza2009absolute} assumes that the
+vehicle adheres to the Ackerman steering principle and exploit the
+non-holomicity of its motion, to compute the scale.
 
 \paragraph{Learning methods} We are not aware of works that directly
 learn the monocular scale. Yet there are a number of works that use
@@ -73,8 +90,6 @@ motion dynamics. In~\cite{muller2017flowdometry} the authors use
 optical flow images as CNN input to learn and infer camera
 motion. Authors in~\cite{DBLP:journals/corr/MohantyADGSC16} also
 propose to train a CNN.
-
-
 
 \subsection{Our method}
 
@@ -495,15 +510,6 @@ Now LSTM decides on its output.  The output is based on the cell state
   h_t = o_t*tanh(C_t)
 \end{equation}
 
-\begin{figure}[ht!]
-  \centering \includegraphics[width=.7\textwidth]{LSTM3-chain}
-  \caption{Long Short Term Memory}\label{fig:lstm1}
-\end{figure}
-
-\begin{figure}[ht!]
-  \centering \includegraphics[width=.5\textwidth]{LSTM2-notation}
-  \caption{A notation used in Figure~\ref{fig:lstm1}}\label{fig:lstm2}
-\end{figure}
 \begin{figure}[ht]
   \centering
   \begin{tikzpicture}
@@ -712,6 +718,39 @@ $\{\hat{y}_i\}_{i=0}^N$.  We report the mean absolute error:
   \label{table:1}
 \end{table}
 
+\section{Conclusions and Discussion}
+
+This works presents a data driven approach for monocular scale
+estimation.  We take a holistic path and learn the task end-to-end,
+rather than splitting it into different sub-tasks.
+
+We experiment with both ``shallow'' random-forest approach and more
+recent deep learning methods.  Deep methods seem to outperform random
+forest consistently.
+
+We experiment with a number of deep architectures. We learn that the
+fully convolutional architecture performs better than the traditional
+(fully-connected layer based) networks.  Use of pre-trained weights
+from the flow-network significantly improves the results.
+
+The network performs about the same if trained on RBG or gray images.
+We explored different ways for data augmentation, e.g, train the
+network on images of the right camera as well as the left camera,
+train on image pairs that are not strictly subsequent, but didn't find
+significant improvement.
+
+Our results show that statistical machine learning is a viable
+candidate for monocular scale estimation (despite being sub-par to
+geometric methods now).  This method have a benefit of not-making
+scene, camera pose assumptions, which may render them as more widely
+applicable in the future.  In this work we deliberately didn't to any
+scale refinement or blending with other scale estimation methods, to
+show clearly what the convnets are capable of in this specific
+context.
+
+The main challenges are how to go beyond a purely supervised approach
+and better utilize the abundance of information that is present in the
+images.
 
 %%% Local Variables:
 %%% mode: latex
