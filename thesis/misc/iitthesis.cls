@@ -115,28 +115,28 @@
 
 % A Ph.D. thesis is the default...
 \newcommand{\iitthesis@degreeEnglish}{Doctor of Philosophy}
-\newcommand{\iitthesis@degreeHebrew}{ãå÷èåø ìôéìåñåôéä}
+\newcommand{\iitthesis@degreeHebrew}{Ã£Ã¥Ã·Ã¨Ã¥Ã¸ Ã¬Ã´Ã©Ã¬Ã¥Ã±Ã¥Ã´Ã©Ã¤}
 \DeclareOption{PhD}{%
 }
 
 \DeclareOption{MSc}{%
   \renewcommand{\iitthesis@degreeEnglish}{Master of Science in \iitthesis@disciplineEnglish}
-  \renewcommand{\iitthesis@degreeHebrew}{îâéñèø ìîãòéí á\relax\iitthesis@disciplineHebrew}
+  \renewcommand{\iitthesis@degreeHebrew}{Ã®Ã¢Ã©Ã±Ã¨Ã¸ Ã¬Ã®Ã£Ã²Ã©Ã­ Ã¡\relax\iitthesis@disciplineHebrew}
 }
 
 \DeclareOption{MArch}{%
   \renewcommand{\iitthesis@degreeEnglish}{Master of Architecture}
-  \renewcommand{\iitthesis@degreeHebrew}{îâéñèø ìàøëéè÷èåøä}
+  \renewcommand{\iitthesis@degreeHebrew}{Ã®Ã¢Ã©Ã±Ã¨Ã¸ Ã¬Ã Ã¸Ã«Ã©Ã¨Ã·Ã¨Ã¥Ã¸Ã¤}
 }
 
 \DeclareOption{MEcon}{%
   \renewcommand{\iitthesis@degreeEnglish}{Master of Economics}
-  \renewcommand{\iitthesis@degreeHebrew}{îâéñèø ìëìëìä}
+  \renewcommand{\iitthesis@degreeHebrew}{Ã®Ã¢Ã©Ã±Ã¨Ã¸ Ã¬Ã«Ã¬Ã«Ã¬Ã¤}
 }
 
 \DeclareOption{ME}{%
   \renewcommand{\iitthesis@degreeEnglish}{Master of Engineering}
-  \renewcommand{\iitthesis@degreeHebrew}{îâéñèø ìäğãñä}
+  \renewcommand{\iitthesis@degreeHebrew}{Ã®Ã¢Ã©Ã±Ã¨Ã¸ Ã¬Ã¤Ã°Ã£Ã±Ã¤}
 }
 
 \newbool{iitthesis-abbrevs}
@@ -205,7 +205,7 @@
  {}
  {%
   \listoffigures%
-  \addcontentsline{cot}{chapter}{øùéîú àéåøéí}%
+  \addcontentsline{cot}{chapter}{Ã¸Ã¹Ã©Ã®Ãº Ã Ã©Ã¥Ã¸Ã©Ã­}%
   \addcontentsline{toc}{chapter}{List of Figures}%
   }
 }%
@@ -290,27 +290,27 @@
 }
 
 \iitthesis@thesisdatafield{authorEnglish}{Name of Author}
-\iitthesis@thesisdatafield{authorHebrew}{ùí äîçáø}
+\iitthesis@thesisdatafield{authorHebrew}{Ã¹Ã­ Ã¤Ã®Ã§Ã¡Ã¸}
 \iitthesis@thesisdatafield{titleEnglish}{Thesis Title}
-\iitthesis@thesisdatafield{titleHebrew}{ëåúøú äçéáåø}
+\iitthesis@thesisdatafield{titleHebrew}{Ã«Ã¥ÃºÃ¸Ãº Ã¤Ã§Ã©Ã¡Ã¥Ã¸}
 \iitthesis@thesisdatafield{disciplineEnglish}{Discipline Name}
-\iitthesis@thesisdatafield{disciplineHebrew}{ùí äúçåí äîãòé}
+\iitthesis@thesisdatafield{disciplineHebrew}{Ã¹Ã­ Ã¤ÃºÃ§Ã¥Ã­ Ã¤Ã®Ã£Ã²Ã©}
 \iitthesis@thesisdatafield{supervisionEnglish}{Information regarding the supervision and supervisors}
-\iitthesis@thesisdatafield{supervisionHebrew}{îéãò òì äîğçéí åääğçéä}
-\iitthesis@thesisdatafield{publicationInfoHebrew}{öéåï àí äòáåãä ôåøñîä áëúáé òú àå  äåöâä áëğñéí. äøùéîä úëúá áäúàí ìëììé äöéèåè (ëåìì äëåúø åùîåú äùåúôéí). áî÷øä ùì ùéúåó ôòåìä, ôéøåè úøåîú äîâéù.}
+\iitthesis@thesisdatafield{supervisionHebrew}{Ã®Ã©Ã£Ã² Ã²Ã¬ Ã¤Ã®Ã°Ã§Ã©Ã­ Ã¥Ã¤Ã¤Ã°Ã§Ã©Ã¤}
+\iitthesis@thesisdatafield{publicationInfoHebrew}{Ã¶Ã©Ã¥Ã¯ Ã Ã­ Ã¤Ã²Ã¡Ã¥Ã£Ã¤ Ã´Ã¥Ã¸Ã±Ã®Ã¤ Ã¡Ã«ÃºÃ¡Ã© Ã²Ãº Ã Ã¥  Ã¤Ã¥Ã¶Ã¢Ã¤ Ã¡Ã«Ã°Ã±Ã©Ã­. Ã¤Ã¸Ã¹Ã©Ã®Ã¤ ÃºÃ«ÃºÃ¡ Ã¡Ã¤ÃºÃ Ã­ Ã¬Ã«Ã¬Ã¬Ã© Ã¤Ã¶Ã©Ã¨Ã¥Ã¨ (Ã«Ã¥Ã¬Ã¬ Ã¤Ã«Ã¥ÃºÃ¸ Ã¥Ã¹Ã®Ã¥Ãº Ã¤Ã¹Ã¥ÃºÃ´Ã©Ã­). Ã¡Ã®Ã·Ã¸Ã¤ Ã¹Ã¬ Ã¹Ã©ÃºÃ¥Ã³ Ã´Ã²Ã¥Ã¬Ã¤, Ã´Ã©Ã¸Ã¥Ã¨ ÃºÃ¸Ã¥Ã®Ãº Ã¤Ã®Ã¢Ã©Ã¹.}
 \iitthesis@thesisdatafield{publicationInfoEnglish}{Info about whether the contents of the thesis was published, about collaborators and the thesis author's contribution.}
 \iitthesis@thesisdatafield{GregorianDateEnglish}{Gregorian Month and Year}
-\iitthesis@thesisdatafield{GregorianDateHebrew}{çåãù åùğä âøâåøéàğééí}
+\iitthesis@thesisdatafield{GregorianDateHebrew}{Ã§Ã¥Ã£Ã¹ Ã¥Ã¹Ã°Ã¤ Ã¢Ã¸Ã¢Ã¥Ã¸Ã©Ã Ã°Ã©Ã©Ã­}
 \iitthesis@thesisdatafield{JewishDateEnglish}{Hebrew Month and Year}
-\iitthesis@thesisdatafield{JewishDateHebrew}{çåãù åùğä òáøééí}
+\iitthesis@thesisdatafield{JewishDateHebrew}{Ã§Ã¥Ã£Ã¹ Ã¥Ã¹Ã°Ã¤ Ã²Ã¡Ã¸Ã©Ã©Ã­}
 \iitthesis@thesisdatafield{personalAcknowledgementEnglish}{The author's personal acknowledgements.}
-\iitthesis@thesisdatafield{personalAcknowledgementHebrew}{ùìîé-äúåãä ùì äîçáø.}
+\iitthesis@thesisdatafield{personalAcknowledgementHebrew}{Ã¹Ã¬Ã®Ã©-Ã¤ÃºÃ¥Ã£Ã¤ Ã¹Ã¬ Ã¤Ã®Ã§Ã¡Ã¸.}
 \iitthesis@thesisdatafield{financialAcknowledgementEnglish}{The generous financial help of the Technion is gratefully acknowledged.}
-\iitthesis@thesisdatafield{financialAcknowledgementHebrew}{àğé îåãä ìèëğéåï òì äúîéëä äëñôéú äğãéáä áäùúìîåúé.}
+\iitthesis@thesisdatafield{financialAcknowledgementHebrew}{Ã Ã°Ã© Ã®Ã¥Ã£Ã¤ Ã¬Ã¨Ã«Ã°Ã©Ã¥Ã¯ Ã²Ã¬ Ã¤ÃºÃ®Ã©Ã«Ã¤ Ã¤Ã«Ã±Ã´Ã©Ãº Ã¤Ã°Ã£Ã©Ã¡Ã¤ Ã¡Ã¤Ã¹ÃºÃ¬Ã®Ã¥ÃºÃ©.}
 % Regulations require the English abstract contain 200-500 words.
 \iitthesis@thesisdatafield{abstractEnglish}{Abstract of the thesis.}
 % Regulations require the Hebrew abstract contain 1,000-2,000 words.
-\iitthesis@thesisdatafield{abstractHebrew}{ú÷öéø äçéáåø.}
+\iitthesis@thesisdatafield{abstractHebrew}{ÃºÃ·Ã¶Ã©Ã¸ Ã¤Ã§Ã©Ã¡Ã¥Ã¸.}
 \iitthesis@thesisdatafield{abbreviationsAndNotation}{Abbreviations and
 notations listing here.} \iitthesis@thesisdatafield{thesisbibstyle}{alpha}
 % the following should be a comma-separate list of relative filenames,
@@ -392,76 +392,76 @@ notations listing here.} \iitthesis@thesisdatafield{thesisbibstyle}{alpha}
 
  % We do not make the bibliography here - for now...
 
- \clearpage
- \pagestyle{empty}
+ % \clearpage
+ % \pagestyle{empty}
 
- % We are now on the next page after the end of the main matter. We wish
- % to begin the Hebrew content - but we don't want to do this on the same
- % sheet, with English on the recto side and Hebrew on the verso; the Hebrew
- % content pages are added to the PDF in reverse direction and we wish to
- % begin 'cleanly' with the English sheets complete and left alone, so we
- % just clear the sheet
- \cleardoublepage
+ % % We are now on the next page after the end of the main matter. We wish
+ % % to begin the Hebrew content - but we don't want to do this on the same
+ % % sheet, with English on the recto side and Hebrew on the verso; the Hebrew
+ % % content pages are added to the PDF in reverse direction and we wish to
+ % % begin 'cleanly' with the English sheets complete and left alone, so we
+ % % just clear the sheet
+ % \cleardoublepage
 
- \reversepageorder
-   % reversing the output page order from this point on
+ % \reversepageorder
+ %   % reversing the output page order from this point on
 
- % The first Hebrew page must appear with the binding to its right; but the
- % way things are so far in the document is that odd pages (recto) have
- % margins to the left. So... maybe we should \cleartoleftpage (i.e. clear
- % to the next verso)? No, this will not to. Why? For two reasons.
- %
- % First, remember the page order is reversed. The last page we get on the
- % output, being the first page we set here, must be the Hebrew cover page,
- % not a blank page.
- %
- % Second, if we \cleartoleftpage, this will mess up the  page ordering.
- % If the Hebrew pages are:
- %
- % Title verso, Empty recto, IntroPage1 verso, IntroPage2 recto
- %
- % then a \cleartoleftpage would give us the following sheets:
- %
- % Empty recto + Title verso , Empty recto + IntroPage1 verso,
- % IntroPage2 recto + nothing/empty verso
- %
- % which is not what we wanted: We get a gratuitious empty page between
- % pages 1 and 2 of the intro... so we actually have no choice but to flip
- % the margins
+ % % The first Hebrew page must appear with the binding to its right; but the
+ % % way things are so far in the document is that odd pages (recto) have
+ % % margins to the left. So... maybe we should \cleartoleftpage (i.e. clear
+ % % to the next verso)? No, this will not to. Why? For two reasons.
+ % %
+ % % First, remember the page order is reversed. The last page we get on the
+ % % output, being the first page we set here, must be the Hebrew cover page,
+ % % not a blank page.
+ % %
+ % % Second, if we \cleartoleftpage, this will mess up the  page ordering.
+ % % If the Hebrew pages are:
+ % %
+ % % Title verso, Empty recto, IntroPage1 verso, IntroPage2 recto
+ % %
+ % % then a \cleartoleftpage would give us the following sheets:
+ % %
+ % % Empty recto + Title verso , Empty recto + IntroPage1 verso,
+ % % IntroPage2 recto + nothing/empty verso
+ % %
+ % % which is not what we wanted: We get a gratuitious empty page between
+ % % pages 1 and 2 of the intro... so we actually have no choice but to flip
+ % % the margins
 
- \flipmargins
+ % \flipmargins
 
- \makecoverHebrew
- % We're not clearing to a verso page, since we've flipped the margins;
- % this should generate 1 empty page between the cover page and the title page
- \cleardoublepage
- \maketitleHebrew
- \cleardoublepage
- \makeacknowledgementsHebrew
- \cleardoublepage
+ % \makecoverHebrew
+ % % We're not clearing to a verso page, since we've flipped the margins;
+ % % this should generate 1 empty page between the cover page and the title page
+ % \cleardoublepage
+ % \maketitleHebrew
+ % \cleardoublepage
+ % \makeacknowledgementsHebrew
+ % \cleardoublepage
 
- \pagestyle{plain}
- % We need to reset the displayed page number, but we don't want to
- % change the "real" page number, specifically for verso/recto margin
- % setting reasons; see:
- % http://tex.stackexchange.com/q/36011/5640
- %
- \displayedpagenumbering{roman}{1}
+ % \pagestyle{plain}
+ % % We need to reset the displayed page number, but we don't want to
+ % % change the "real" page number, specifically for verso/recto margin
+ % % setting reasons; see:
+ % % http://tex.stackexchange.com/q/36011/5640
+ % %
+ % \displayedpagenumbering{roman}{1}
 
- \makeabstractHebrew
- % For some reason, if you \clearpage after the Hebrew abstract, the
- % \AtEndDocument command which is part of the auto-list-of-figures
- % generation is not run; so commenting this out
- %\clearpage
+ % \makeabstractHebrew
+ % % For some reason, if you \clearpage after the Hebrew abstract, the
+ % % \AtEndDocument command which is part of the auto-list-of-figures
+ % % generation is not run; so commenting this out
+ % %\clearpage
 
- % Consider using the solution here:
- % http://tex.stackexchange.com/q/21703/5640
- %\usepackage{atbegshi}
- % and reverse the ordering of the Hebrew sheets
+ % % Consider using the solution here:
+ % % http://tex.stackexchange.com/q/21703/5640
+ % %\usepackage{atbegshi}
+ % % and reverse the ordering of the Hebrew sheets
 
- \resumenormalpageorder
-    % now outputting the reversed pages and resuming normal order
-    % (although we have no pages left...)
+ % \resumenormalpageorder
+ %    % now outputting the reversed pages and resuming normal order
+ %    % (although we have no pages left...)
 
 }
 
@@ -587,7 +587,7 @@ notations listing here.} \iitthesis@thesisdatafield{thesisbibstyle}{alpha}
 \newcommand{\makeabstractEnglish}{%
  \chapter*{Abstract}
  \addcontentsline{toc}{chapter}{Abstract}
- \addcontentsline{cot}{chapter}{ú÷öéø}
+ \addcontentsline{cot}{chapter}{ÃºÃ·Ã¶Ã©Ã¸}
 
  \iitthesis@abstractEnglish
 }
@@ -595,7 +595,7 @@ notations listing here.} \iitthesis@thesisdatafield{thesisbibstyle}{alpha}
 \newcommand{\makeabbreviationsAndNotation}{%
  \chapter*{Abbreviations and Notations}
  \addcontentsline{toc}{chapter}{Abbreviations and Notations}
- \addcontentsline{cot}{chapter}{øùéîú ÷éöåøéí åñîìéí}
+ \addcontentsline{cot}{chapter}{Ã¸Ã¹Ã©Ã®Ãº Ã·Ã©Ã¶Ã¥Ã¸Ã©Ã­ Ã¥Ã±Ã®Ã¬Ã©Ã­}
  \iitthesis@abbreviationsAndNotation
 }
 
@@ -651,14 +651,14 @@ notations listing here.} \iitthesis@thesisdatafield{thesisbibstyle}{alpha}
 
    \vspace*{\stretch{1}}
 
-   \vphantom{çéáåø òì îç÷ø}
+   \vphantom{×©×œ×•× ×œ×›×•×œ×}
 
    \vspace*{\stretch{0.5}}
 
    \vphantom{\parbox{3.5in}{
      \normalsize
      \begin{center}
-       ìùí îéìåé çì÷é ùì äãøéùåú ì÷áìú äúåàø \\
+       Ã¬Ã¹Ã­ Ã®Ã©Ã¬Ã¥Ã© Ã§Ã¬Ã·Ã© Ã¹Ã¬ Ã¤Ã£Ã¸Ã©Ã¹Ã¥Ãº Ã¬Ã·Ã¡Ã¬Ãº Ã¤ÃºÃ¥Ã Ã¸ \\
        \iitthesis@degreeHebrew
      \end{center}
   }}
@@ -672,9 +672,9 @@ notations listing here.} \iitthesis@thesisdatafield{thesisbibstyle}{alpha}
   \vphantom{\parbox{3in}{
      \normalsize
      \begin{center}
-       îåâù ìñğè äèëğéåï --- îëåï èëğåìåâé ìéùøàì
+       Ã®Ã¥Ã¢Ã¹ Ã¬Ã±Ã°Ã¨ Ã¤Ã¨Ã«Ã°Ã©Ã¥Ã¯ --- Ã®Ã«Ã¥Ã¯ Ã¨Ã«Ã°Ã¥Ã¬Ã¥Ã¢Ã© Ã¬Ã©Ã¹Ã¸Ã Ã¬
        \iitthesis@JewishDateHebrew
-       \hspace{0.75cm} çéôä \hspace{0.75cm}
+       \hspace{0.75cm} Ã§Ã©Ã´Ã¤ \hspace{0.75cm}
        \iitthesis@GregorianDateHebrew
      \end{center}
   }}
@@ -694,14 +694,14 @@ notations listing here.} \iitthesis@thesisdatafield{thesisbibstyle}{alpha}
 
   \vspace*{\stretch{1}}
 
-  çéáåø òì îç÷ø
+  Ã§Ã©Ã¡Ã¥Ã¸ Ã²Ã¬ Ã®Ã§Ã·Ã¸
 
   \vspace*{\stretch{0.5}}
 
   \parbox{3.5in}{
     \normalsize
     \begin{center}
-      ìùí îéìåé çì÷é ùì äãøéùåú ì÷áìú äúåàø \\
+      Ã¬Ã¹Ã­ Ã®Ã©Ã¬Ã¥Ã© Ã§Ã¬Ã·Ã© Ã¹Ã¬ Ã¤Ã£Ã¸Ã©Ã¹Ã¥Ãº Ã¬Ã·Ã¡Ã¬Ãº Ã¤ÃºÃ¥Ã Ã¸ \\
       \iitthesis@degreeHebrew
     \end{center}
   }
@@ -715,9 +715,9 @@ notations listing here.} \iitthesis@thesisdatafield{thesisbibstyle}{alpha}
   \parbox{4in}{
      \normalsize
      \begin{center}
-       äåâù ìñğè äèëğéåï --- îëåï èëğåìåâé ìéùøàì \\
+       Ã¤Ã¥Ã¢Ã¹ Ã¬Ã±Ã°Ã¨ Ã¤Ã¨Ã«Ã°Ã©Ã¥Ã¯ --- Ã®Ã«Ã¥Ã¯ Ã¨Ã«Ã°Ã¥Ã¬Ã¥Ã¢Ã© Ã¬Ã©Ã¹Ã¸Ã Ã¬ \\
        \iitthesis@JewishDateHebrew
-       \hspace{0.75cm} çéôä \hspace{0.75cm}
+       \hspace{0.75cm} Ã§Ã©Ã´Ã¤ \hspace{0.75cm}
        \iitthesis@GregorianDateHebrew
      \end{center}
   }
@@ -740,7 +740,7 @@ notations listing here.} \iitthesis@thesisdatafield{thesisbibstyle}{alpha}
     %\vspace*{\stretch{1}}
     \medskip
     \begin{center}
-    \textbf{\Large \textsc{úåãåú}}
+    \textbf{\Large \textsc{ÃºÃ¥Ã£Ã¥Ãº}}
     \end{center}
     \noindent
     \iitthesis@personalAcknowledgementHebrew
@@ -755,8 +755,8 @@ notations listing here.} \iitthesis@thesisdatafield{thesisbibstyle}{alpha}
 
 \newcommand{\makeabstractHebrew}{
   \begin{otherlanguage}{hebrew}
-  \chapter*{ú÷öéø}
-  \addcontentsline{cot}{chapter}{ú÷öéø òáøé}
+  \chapter*{ÃºÃ·Ã¶Ã©Ã¸}
+  \addcontentsline{cot}{chapter}{ÃºÃ·Ã¶Ã©Ã¸ Ã²Ã¡Ã¸Ã©}
   \addcontentsline{toc}{chapter}{Hebrew Abstract}
   \setlength{\parindent}{0pt}
   \setlength{\parskip}{10pt}

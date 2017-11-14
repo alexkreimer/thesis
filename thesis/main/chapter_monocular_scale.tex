@@ -18,18 +18,18 @@ simplicity.  It is well known that the translation scale parameter is
 not directly observable for a motion of a single camera.
 
 We argue, that for natural scenes the scale information is present in
-the images (see e.g.~\ref{fig:feature_vectors}).  We propose to apply
-statistical machine learning techniques to learn the monocular scale.
-In the following chapters we present an overview of the existing works
-in the field, describe our method and present the experimental
-results.
+the images (see e.g. Figure~\ref{fig:feature_vectors}).  We propose to
+apply statistical machine learning techniques to learn the monocular
+scale.  In the following sections we present an overview of the
+existing works in the field, describe our method and present the
+experimental results.
 
 \section{Related work}
 \paragraph{Geometric methods} Previous geometric works in monocular
 scale estimation may roughly be divided into ground plane and
 non-ground plane methods.
 
-Ground plane methods rely on the following assumptions: camera hight
+Ground plane methods rely on the following assumptions: camera height
 (a distance from the camera principle center to the ground plane) is
 known to the method, a predefined region of the image (usually the one
 in front of the camera in the world) contains projections of the
@@ -39,14 +39,14 @@ assumptions allow to properly scale the camera motion vector.
 Ground planes in consecutive images are commonly related by a
 homography matrix. Homography matrix may be estimated from a set of
 sparse correspondences (e.g.,~\cite{song2014robust}) or from dense
-region matching as in (~\cite{7995955}).  Sparse correspondence method
-is sensitive both to outliers and to scarcity of features in the
-ground region.  Dense region methods tend to fail when the region
-deviates from being planar (especially in curb areas). Modern method
-to parameterize the homography through camera and plane parameters
-rather than plane matrix entries.  This allows to prevent homography
+region matching as in ~\cite{7995955}.  The sparse correspondence
+method is sensitive both to outliers and to scarcity of features in
+the ground region.  Dense region methods tend to fail when the region
+deviates from being planar (especially in curb areas). Modern methods
+parameterize the homography through camera and plane parameters rather
+than plane matrix entries.  This allows to prevent homography
 decomposition step that introduces additional errors, see
-e.g.,~\cite{zhou2016reliable}, that contribute a divide-and-conquer
+e.g.,~\cite{zhou2016reliable}, that contributes a divide-and-conquer
 approach, where they decompose the ground plane homography into the
 structure and the motion parameters.  Their optimization step is based
 on this division.  ~\cite{kitt2011monocular} take a more SLAM-like
@@ -56,13 +56,12 @@ ground-plane features which they use to refine the scale.
 on the structure from motion techniques with vanishing point
 estimation which renders the algorithm robust in urban
 scenarios. ~\cite{7995955} considers both dense and sparse cues for
-ground plane estimation, this makes their method robust toward varying
-availability and distribution of trackable ground structure.  They
-parameterize and optimize over the motion parameters directly, instead
-of optimizing the ground plane homography.  Furthermore they use
-classifiers based on e.g., moments and residuals to reject scale
-outliers.  This work seems to achieve best known results of monocular
-scale estimation.  We compare against their results.
+ground plane estimation.  This makes their method robust toward
+varying availability and distribution of trackable ground structure.
+They parameterize and optimize over the motion parameters directly,
+instead of optimizing the ground plane homography.  Furthermore they
+use classifiers based on e.g., moments and residuals to reject scale
+outliers.
 
 The idea of using non-ground objects to estimate scale was explored
 by~\cite{song2014robust} and~\cite{frost2016}.  These works employ
@@ -76,20 +75,32 @@ motion estimation. ~\cite{scaramuzza2009absolute} assumes that the
 vehicle adheres to the Ackerman steering principle and exploit the
 non-holomicity of its motion, to compute the scale.
 
-\paragraph{Learning methods} We are not aware of works that directly
-learn the monocular scale. Yet there are a number of works that use
+\paragraph{Learning methods} There are a number of works that use
 machine learning approaches to solve the 6DOF visual odometry.
-Optical flow is used to train k-nearest neighbour, gaussian processes
+Optical flow is used to train k-nearest neighbour, Gaussian processes
 and support vector machines in ~\cite{roberts2008memory},
 ~\cite{guizilini2013semi}, ~\cite{CIARFUGLIA20141717}
 respectively. ~\cite{wang2017deepvo} shows that visual odometry may be
 addressed in the end-to-end fashion, using the deep learning
-techniques, the authors use CNN to learn the geometric feature
+techniques. The authors use CNN to learn the geometric feature
 representation and the recurent neural networks to model sequential
-motion dynamics. In~\cite{muller2017flowdometry} the authors use
+motion dynamics. In~\cite{muller2017flowdometry}, the authors use
 optical flow images as CNN input to learn and infer camera
 motion. Authors in~\cite{DBLP:journals/corr/MohantyADGSC16} also
 propose to train a CNN.
+
+Recent work of~\cite{frost2016} (our work was done independently)
+performs similar experiment to ours.  They train a convnet to predict
+camera translation vector magnitude (referred to as ``speed'').  Their
+work makes two major contributions: a method to learn a camera
+``speed'' and a regulalization method to incorporate such speed
+prediction into a bundle adjustment procedure.  Their learning
+procedure is very similar to the one proposed in this work.  The novel
+regularization they propose penalizes differences between the
+estimated and measured speed of the camera during the open-loop
+trajectory. They are able to produce a virtually scale drift free
+monocular SLAM trajectories using the combination of the above two
+procedures.  We compare to their results.
 
 \subsection{Our method}
 
@@ -137,14 +148,14 @@ The regions $R_i$ are usually chosen to be multidimensional boxes (axis aligned)
 \sum\limits_{j=1}^J\sum_{x\in R_j}{(x-\mean{y}_j)^2}
 \end{equation}
 
-Where $y_j$ denotes the mean of the response values of the
-samples in region $R_j$.  Unfortunately, solving the optimization
+Where $y_j$ denotes the mean of the response values of the samples in
+region $R_j$.  Unfortunately, solving the optimization
 problem~\ref{eq:tree_objective} is computationally hard.  Usually it
 is replaced with a greedy algorithm, called \textit{recursive binary
   splitting}.  This approach starts at the top of the tree and
 greedily chooses the best split at that point that minimizes the
-variance of its sub-trees.  To be more precise, for each $j$ and $s$ we
-define the hyper-planes:
+variance of its sub-trees.  To be more precise, for each $j$ and $s$
+we define the hyper-planes:
 
 \begin{equation}
   R_1(j,s) = \{ X\lvert X_j<s \}\quad\text{and}\quad R_2(j,s) = \{ X\lvert X_j \geq s \},
@@ -243,7 +254,7 @@ The network architecture consists of five convolutional and three fully connecte
   \label{tab:zf_geometry}
 \end{table}
 
-The flow of data through the network
+The flow of data through the network is shown in Figure~\ref{fig:zf data flow}.
 \begin{figure}
   \begin{tikzpicture}
   [
@@ -283,6 +294,7 @@ The flow of data through the network
   \end{scope}
 \end{tikzpicture}
 \caption{ZF network data flow.  Each rectangle depicts a top blob for a corresponding layer.}
+\label{fig:zf data flow}
 \end{figure}
 
 There is a last fully connected layer that reduces a network to a
@@ -291,7 +303,7 @@ loss to train the network.  Total number of parameters is about 624
 million.
 
 
-\subsection{FlowNet}
+\subsection{FlowNet}~\label{subsection:flownet}
 
 Fully-convolutional network is a recent trend in the field.  They are
 known to train better and have less parameters vs. their fully
@@ -361,6 +373,7 @@ task and has pre-trained model readily available.
   \begin{scope}[on background layer]
     \node[rounded corners, fill=black!20, fit=(dl) (l13)] {};
   \end{scope}
+  \label{fig:flownet data flow}
 \end{tikzpicture}
 
 We use Euclidean loss to train the network. The total number of
@@ -471,15 +484,16 @@ Networks (LSTM), which is a special kind of RNN addresses these issues.
 LSTM were introduced by~\cite{hochreiter1997long}, they are
 specifically designed to model long term dependencies. Similarly to
 RNN, LSTM posses a chain-like structure. Each repeating node has an
-internal structure depicted in Figure~\ref{fig:lstm1}.
+internal structure depicted in Figure~\ref{fig:lstm node}.
 
-The first step in LSTM is to decide what information we are going to
-make use of in the cell state $C_{t-1}$.  This is done by a sigmoid
-layer ``forget gate layer'', equation ~\ref{eq:forget gate}, that
-looks at the previous output $h_{t-1}$ and the current input $x_t$ and
-outputs a number in $[0,1]$ for every cell state component. $0$ means
-completely forget this component and $1$ means completely make use of
-it.
+The key to the LSTM is a conveyor-like cell state $C_t$ that goes
+through all cells.  Each cell may alter the cell state.  The first
+step is to decide what information we are going to make use of in the
+cell state $C_{t-1}$.  This is done by a sigmoid ``forget gate'' layer
+(Equation ~\ref{eq:forget gate}). The ``forget gate'' looks at the
+previous output $h_{t-1}$ and the current input $x_t$ and outputs a
+number in $[0,1]$ for every cell state component. $0$ means completely
+forget this component and $1$ means completely make use of it.
 \begin{equation}\label{eq:forget gate}
   f_t = \sigma(W_f[h_{t-1}, x_t] + b_f)
 \end{equation}
@@ -534,8 +548,8 @@ Now LSTM decides on its output.  The output is based on the cell state
     \node (12) [right=7cm of 15] {$h_t$};
     \node (13) [left=1cm of 5] {$C_{t-1}$};
     \node (14) [left=1cm of 15] {$h_{t-1}$};
-    \begin{scope}[->,decoration={post length=4pt},rounded corners=2mm]
-      \draw[--] (8) -- (1);
+    \begin{scope}[->,rounded corners=2mm]
+      \draw (8) -- (1);
       \draw (15) -- ++(.5cm, 0) -| (2.south);
       \draw (15) -- ++(2cm, 0) -| (3.south);
       \draw (15) -- ++(3cm, 0) -| (4.south);
@@ -552,31 +566,17 @@ Now LSTM decides on its output.  The output is based on the cell state
       \draw (13) -- (5);
       \draw (14) -- (15);
     \end{scope}
-    \begin{scope}[on background layer]
-      \node[rounded corners, fill=black!20, fit=(2) (3) (4) (5) (6) (7) (9) (10) (15)] {};
-    \end{scope}
   \end{tikzpicture}
   \caption{LSTM Node}
   \label{fig:lstm node}
 \end{figure}
 
 We combine the sequential strengths of the LSTM with convolutional
-networks to tackle our problem.  $x_t$ vectors are produced by a
-convolutional network.  This is a fairly common representation used
-previously.  The convnet and the LSTM are trained jointly.
-
-The geometry of the network is as follows:
-\begin{itemize}
-\item conv1: (96, 6, 7, 7)
-\item conv2: (384, 48, 5, 5)
-\item conv3: (512, 384, 3, 3)
-\item conv4: (512, 256, 3, 3)
-\item conv5: (384, 256, 3, 3)
-\item fc6:   (4096, 34560)
-\item lstm1: (1024, 4096)
-\item fc-final: (1, 256)
-\end{itemize}
-Total number of trainable parameters is about 150 millions.
+networks.  We use our FlowNet (see~\ref{subsection:flownet}) as
+feature extractor. The convnet receives as input a sequence of image
+pairs and produces a sequence of $x_t$ feature vectors, which are used
+by the LSTM to produce the output sequence.  The convnet and the LSTM
+are trained jointly.
 
 \section{Experiments}
 
@@ -585,46 +585,46 @@ Total number of trainable parameters is about 150 millions.
 We train and test on the KITTI data-set~\cite{geiger2013vision}.  The
 data-set consists of 11 sequences with ground truth data.  We
 arbitrarily use sequence 00 for testing and sequences 01-10 for
-training.  There are 4540 and 18650 images in the test and the train
+training.  There are 4540 and 14950 images in the test and the train
 sets respectively. We only use the data from the left color camera.
 Figure~\ref{fig:scales} depicts the distribution of the scale values
 over the train and the test sets.
 
 \begin{figure}[!ht]
   \includegraphics[width=0.9\linewidth]{no_00-scales}
-  \caption{The train set}
-  \label{fig:stats-no_00}
   \caption{Scale distributions}
   \label{fig:scales}
 \end{figure}
 
-\subsection{Random Forest}
+\subsection{Random Forest}\label{sec:features}
 
-\subsection{Feature Extraction}\label{sec:features}
-
-In order to train the random forest we need to represent subsequent
-image pairs as feature vectors, which are created as follows: we
-extract and match sparse salient points in both input images.  The
-output of this stage is a set of a corresponding pixel locations.
-Then, we compute the point displacement magnitudes.  Finally, we bin
-all the interest pundits according to a grid and create histogram of
-displacement magnitudes for each bin.  Concatenating all histograms
-together produces a feature vector. We use Harris corners and square
-$11\times 11$ patches as corner descriptors. Sum of square differences
-is used as a distance measure with the winning pair declared a match.
-To prune the outliers we fit the fundamental matrix into the matched
-corner sets and remove the corners that do not agree with the model.
+Training a random forest regressor requires hand crafted feature
+extraction.  We convert subsequent image pairs to feature vectors as
+follows: we extract and match sparse salient points in both input
+images.  The output of this stage is a set of a corresponding pixel
+locations.  For each salient feature we compute the spacial
+displacement magnitudes (e.g., sparse optical flow).  We define a grid
+in the image space and assign each salient point to a bin.  Next, we
+create histogram of displacement magnitudes for each bin.
+Concatenating all histograms together produces a feature vector. We
+use Harris corners and square $11\times 11$ patches as corner
+descriptors. Sum of square differences is used as a distance measure
+with the winning pair declared a match.  To prune the outliers we fit
+the fundamental matrix into the matched corner sets and remove the
+corners that do not agree with the model.
 Figure~\ref{fig:ex_corner_and_matching} shows a typical example of
 extracted and matched corners.
 
-
-Some statistics of the features is presented in the
-Figure~\ref{fig:feature_vectors}. We expect the peaks, that correspond
-to a closer image regions have a distributions shifted to the right
-(i.e., larger displacements) and the peaks that correspond to a
-regions farther away should be closer to zero.  This behavior can be
-observed especially well for the feature vectors that correspond to
-larger camera displacements (e.g. Figure~\ref{fig:1c}).
+Figure~\ref{fig:feature_vectors} depicts the statistics of the feature
+vectors extracted from the training data. One can see the peaks, that
+correspond to a closer image regions have a distributions shifted to
+the right (i.e., larger displacements) and the peaks that correspond
+to a regions farther away should be closer to zero.  This behavior can
+be observed especially well for the feature vectors that correspond to
+larger camera displacements (e.g. Figure~\ref{fig:1c}).  This figure
+is an insight why we chose this particular type of feature vector: the
+distribution of the deisplacements depends on the size of the camera
+motion.
 
 \begin{figure}[!ht]
   \centering
@@ -664,59 +664,149 @@ larger camera displacements (e.g. Figure~\ref{fig:1c}).
     \includegraphics[width=.8\textwidth]{00_mean_feature_vector_1_1}
     \caption{}\label{fig:1c}
   \end{subfigure}%
-  \caption{Average feature vectors for samples centered around the
-    specific camera translation magnitude.  Each peak corresponds to a
-    grid cell (e.g. here the grid is 4 rows by 6 columns by 300 bins,
-    so the feature vector is of the dimension 6*4*300=7200).  The grid
-    is sampled in a column-major mode. So the first four peaks
-    correspond to the leftmost column of the image grid.}
+  \caption{Average feature vectors (see~\protect\ref{sec:features})
+    for samples centered around the specific camera translation
+    magnitude.  Each peak corresponds to a grid cell (e.g., here the
+    grid is 4 rows by 6 columns by 300 bins, so the feature vector has
+    6*4*300=7200 dimensions).  The grid is sampled in a column-major
+    mode. So the first four peaks correspond to the leftmost column of
+    the image grid.}
   \label{fig:feature_vectors}
 \end{figure}
 
 We bin each image into $6\times 4$ grid.  For each bin in the image we
 compute the histogram of corner disparities.  By disparity we denote
 the displacement of the corner in the image.  We use $300$-bin
-histogram for disparities (e.g, feature vector length is $7200$).
+histogram for disparities (e.g, feature vector length is $7200$).  We
+experimented with different values for the grid size, number of
+histogram bins and number of random trees in the forest.
+Aforementioned set of parameters was found empirically to give the
+best results over the validation set.
 
-We use the extracted features to fit a random forest, by means of
-recursive note splitting with sub-node variance minimization. The mean
-absolute error is 0.174 meters with a standard deviation of 0.148
-meters.
+We use the extracted features to fit a random forest of 100 trees, by
+means of recursive node splitting with sub-node variance minimization.
+We use scikit-lean~\cite{scikit-learn} random forest implementation.
+As one may see in Table~\ref{table:train result}, random forest
+exibits a very low training error/variance but has weaker
+generalization ability, as opposed to deep models.
 
-\section{Neural networks}
+See Section~\ref{sec:results} for random forest test inference
+results.
+
+\subsection{Neural networks}
 
 We use Caffe~\cite{jia2014caffe} framework to train and test our
 models.
-\paragraph{ZF} We train using vanilla SGD for 100 epochs and decrease
-learning rate by factor of .1 every 10 epochs. We train the network
-from scratch.
-\paragraph{FlowNet} We also train using vanilla SGD for 100 epochs
-decreasing learning rate by .1 every 10 epochs.  We start from
-pre-trained weights of~\cite{fischer2015flownet}.
-\paragraph{LSTM} TBD
+\paragraph{ZF} We train using vanilla SGD for 100 epochs. Learning
+rate is initialized to 1e-5 and decreases by factor of .1 every 10
+epochs. We train the network from scratch.
 
-\section{Results}
 
-Let the ground truth sequence of camera motion scales by
-$\{y_i\}_{i=0}^N$.  Let the predicted scales for the same sequence be
-$\{\hat{y}_i\}_{i=0}^N$.  We report the mean absolute error:
-\[
-  \mu = \frac{1}{N}\sum_0^N{|y_i - \hat{y}_i|}
-\]
+\paragraph{FlowNet} We train using vanilla SGD for 100
+epochs. Learning rate is initialized to 1e-5 and decreases by factor
+of .1 every 10 epochs. We start from pre-trained weights
+of~\cite{fischer2015flownet}. The training proceedes with minibatch
+size of 5. Train loss graph is shown in~\ref{fig:flownet_train_loss}.
+It may be that we proceed with training after the loss stopped
+decreasing, but it seems that 100 epoch training time is widely used
+in the literature.  Also, note that the loss is periodic, which
+happens because of multi-epoch training.
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.9\linewidth]{flownet_train_loss}
+  \caption{FlowNet train loss. Samples taken every 100 minibatch iterations.  We use minibatch of size 5}
+  \label{fig:flownet_train_loss}
+\end{figure}
+
+\paragraph{LSTM} We also train using vanilla SGD for 100 epochs
+decreasing learning rate by .1 every 10 epochs.  We fine-tune from our
+FlowNet trained CNN trained weights.
 
 \begin{table}[ht]
   \centering
-  \begin{tabular}{ lcccc }
+  \begin{tabular}{ lccccc }
     \hline
-                        & Random Forest & ZF   & FlowNet & LSTM ZF \\
+                       & Random Forest & ZF   & FlowNet          & LSTM FlowNet & \cite{frost2016}   \\
     \hline
-    $\mu\quad[meters]$        & .237          & .200 & \textbf{.103}    & .198 \\
-    $\sigma\quad[meters]$     & .229          & .161 & \textbf{.08}     & .147 \\    
+    $\mu_{abs}$        & 5.79e-06      & .200 & .088    & .097  & \\
+    $\sigma_{abs}$     & 1.40e-05      & .161 & .068    & .074  & \\
+    $\mu$              & 4.88e-15      &-.007 & -.    & .019  & .014\\
+    $\sigma$           & 1.51e-05      & .257 & \textbf{.109}    & .121  & .177\\
     \hline
   \end{tabular}
-  \caption{Experimental Results}
-  \label{table:1}
+  \caption{Training errors (in meters)}
+  \label{table:train result}
 \end{table}
+
+\subsection{Results}\label{sec:results}
+
+Let the ground truth sequence of camera motion scales be
+$\{y_i\}_{i=0}^N$, the predicted scales for the same sequence be
+$\{\hat{y}_i\}_{i=0}^N$ and, the corresponding error sequence be:
+\begin{equation}
+  \delta_i = y_i-\hat{y}_i
+\end{equation}
+
+We report two results, the first one is a signed error mean similar to
+the work of~\cite{frost2016}:
+\begin{equation}
+  \mu = \frac{1}{N}\sum_0^N{\delta_i}
+\end{equation}
+
+The second result is the absolute error mean:
+\begin{equation}
+  \mu_{abs} = \frac{1}{N}\sum_0^N{|\delta_i|}
+\end{equation}
+We report corresponding standard deviations, as well, in table~\ref{table:main result}
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{ lccccc }
+    \hline
+                       & Random Forest & ZF   & FlowNet          & LSTM FlowNet & \cite{frost2016}   \\
+    \hline
+    $\mu_{abs}$        & .237          & .200 & \textbf{.088}    & .097  & \\
+    $\sigma_{abs}$     & .229          & .161 & \textbf{.068}    & .074  & \\
+    $\mu$              & -1.44e-3      &-.007 & \textbf{.023}    & .019  & .014\\
+    $\sigma$           & .329          & .257 & \textbf{.109}    & .121  & .177\\
+    \hline
+  \end{tabular}
+  \caption{Experimental Results (in meters)}
+  \label{table:main result}
+\end{table}
+
+Our FlowNet produces predictions that have errors of lower variance
+but are a bit less accurate than~\cite{frost2016}.
+
+Figure~\ref{fig:pred_vs_gt} shows scale predictions overlayed with gt
+values for the first 750 frames of the test sequence.  The prediction
+is unbiased and noisy, clearly follows the trend of the ground truth
+values.  Around frame 550 the model predicts negative scale values,
+which is wrong.  This may be solved by proper data augmentation (e.g.,
+zero motion for a pair that consists of copies of the same image).
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.9\linewidth]{flownet_prediction_vs_gt}
+  \caption{FlowNet prediction vs. ground truth}
+  \label{fig:pred_vs_gt}
+\end{figure}
+
+We perform an additional Kalman Filter step to smooth the predictions:
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.9\linewidth]{flownet_prediction_vs_gt_vs_kf}
+  \caption{FlowNet prediction vs. ground truth vs. Kalman Filter}
+  \label{fig:pred_vs_gt_vs_ekf}
+\end{figure}
+
+Motion estimation
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.9\linewidth]{00_motion}
+  \caption{Motion estimation, based on the FlowNet predictions}
+  \label{fig:00_motion}
+\end{figure}
 
 \section{Conclusions and Discussion}
 
@@ -733,24 +823,28 @@ fully convolutional architecture performs better than the traditional
 (fully-connected layer based) networks.  Use of pre-trained weights
 from the flow-network significantly improves the results.
 
-The network performs about the same if trained on RBG or gray images.
+The network performs about the same if trained on RGB or gray images.
 We explored different ways for data augmentation, e.g, train the
 network on images of the right camera as well as the left camera,
-train on image pairs that are not strictly subsequent, but didn't find
-significant improvement.
+train on image pairs that are not strictly subsequent, but did not
+find significant improvement.
 
 Our results show that statistical machine learning is a viable
-candidate for monocular scale estimation (despite being sub-par to
-geometric methods now).  This method have a benefit of not-making
+candidate for monocular scale estimation.  The (independent) work
+of~\cite{frost2016} also shows that it may be used to produce scale
+drift free reconstructions.  This method have a benefit of not-making
 scene, camera pose assumptions, which may render them as more widely
-applicable in the future.  In this work we deliberately didn't to any
-scale refinement or blending with other scale estimation methods, to
-show clearly what the convnets are capable of in this specific
-context.
+applicable in the future.  In this work we deliberately did no scale
+refinement or blending with other scale estimation methods, to show
+clearly what the convnets are capable of in this specific context.
 
-The main challenges are how to go beyond a purely supervised approach
+Surprisingly, LSTM didn't do better than convnets, which is against
+our expectations. The reason may be that we didn't find a proper way
+to train it.
+
+The main challenge is how to go beyond a purely supervised approach
 and better utilize the abundance of information that is present in the
-images.
+images to get better predictions.
 
 %%% Local Variables:
 %%% mode: latex
