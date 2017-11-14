@@ -89,7 +89,7 @@ optical flow images as CNN input to learn and infer camera
 motion. Authors in~\cite{DBLP:journals/corr/MohantyADGSC16} also
 propose to train a CNN.
 
-Recent work of~\cite{frost2016} (our work was done independently)
+Recent work of~\cite{frost2017using} (our work was done independently)
 performs similar experiment to ours.  They train a convnet to predict
 camera translation vector magnitude (referred to as ``speed'').  Their
 work makes two major contributions: a method to learn a camera
@@ -102,7 +102,7 @@ trajectory. They are able to produce a virtually scale drift free
 monocular SLAM trajectories using the combination of the above two
 procedures.  We compare to their results.
 
-\subsection{Our method}
+\subsection{Our method}\label{sec:our method}
 
 We assume that a single camera moves through space and takes images.
 We treat the initial camera pose (at time $t=0$) as the world
@@ -688,15 +688,20 @@ means of recursive node splitting with sub-node variance minimization.
 We use scikit-lean~\cite{scikit-learn} random forest implementation.
 As one may see in Table~\ref{table:train result}, random forest
 exibits a very low training error/variance but has weaker
-generalization ability, as opposed to deep models.
+generalization ability, as opposed to deep models.  One reason for
+this may be that the features are not discriminative enough, i.e., the
+feature vectors for two image pairs are very close while the scale of
+the motion is distant.
 
 See Section~\ref{sec:results} for random forest test inference
 results.
 
 \subsection{Neural networks}
 
-We use Caffe~\cite{jia2014caffe} framework to train and test our
-models.
+We use Caffe~\cite{jia2014caffe} framework on a single NVIDIA Titan X
+to train and test our models. For brevity, we elaborate on the
+training details only for the FlowNet, since it attains best results.
+
 \paragraph{ZF} We train using vanilla SGD for 100 epochs. Learning
 rate is initialized to 1e-5 and decreases by factor of .1 every 10
 epochs. We train the network from scratch.
@@ -710,11 +715,12 @@ size of 5. Train loss graph is shown in~\ref{fig:flownet_train_loss}.
 It may be that we proceed with training after the loss stopped
 decreasing, but it seems that 100 epoch training time is widely used
 in the literature.  Also, note that the loss is periodic, which
-happens because of multi-epoch training.
+happens because of multi-epoch training.  
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=0.9\linewidth]{flownet_train_loss}
-  \caption{FlowNet train loss. Samples taken every 100 minibatch iterations.  We use minibatch of size 5}
+  \caption{FlowNet train loss. Samples taken every 100 minibatch
+    iterations.  We use minibatch of size 5}
   \label{fig:flownet_train_loss}
 \end{figure}
 
@@ -722,16 +728,20 @@ happens because of multi-epoch training.
 decreasing learning rate by .1 every 10 epochs.  We fine-tune from our
 FlowNet trained CNN trained weights.
 
+Table~\ref{table:train result} summarizes trained model error on the
+training set.  This table shows that while random forest succesfully
+overfits the data, it has a limited generalization ability.
+
 \begin{table}[ht]
   \centering
   \begin{tabular}{ lccccc }
     \hline
-                       & Random Forest & ZF   & FlowNet          & LSTM FlowNet & \cite{frost2016}   \\
+                       & Random Forest & ZF   & FlowNet          & LSTM FlowNet \\
     \hline
-    $\mu_{abs}$        & 5.79e-06      & .200 & .088    & .097  & \\
-    $\sigma_{abs}$     & 1.40e-05      & .161 & .068    & .074  & \\
-    $\mu$              & 4.88e-15      &-.007 & -.    & .019  & .014\\
-    $\sigma$           & 1.51e-05      & .257 & \textbf{.109}    & .121  & .177\\
+    $\mu_{abs}$        & 5.79e-06      & .200 & .088    &  \\
+    $\sigma_{abs}$     & 1.40e-05      & .161 & .068    &  \\
+    $\mu$              & 4.88e-15      &-.007 & -.    & .019  \\
+    $\sigma$           & 1.51e-05      & .257 & \textbf{.109}    & .121  \\
     \hline
   \end{tabular}
   \caption{Training errors (in meters)}
@@ -748,7 +758,7 @@ $\{\hat{y}_i\}_{i=0}^N$ and, the corresponding error sequence be:
 \end{equation}
 
 We report two results, the first one is a signed error mean similar to
-the work of~\cite{frost2016}:
+the work of~\cite{frost2017using}:
 \begin{equation}
   \mu = \frac{1}{N}\sum_0^N{\delta_i}
 \end{equation}
@@ -757,7 +767,11 @@ The second result is the absolute error mean:
 \begin{equation}
   \mu_{abs} = \frac{1}{N}\sum_0^N{|\delta_i|}
 \end{equation}
-We report corresponding standard deviations, as well, in table~\ref{table:main result}
+
+The $\mu_{abs}$ and the $\sigma_{abs}$ show how close the estimates
+are to the ground truth values.  The $\mu$ shows how biased the
+estimator is.  We report corresponding standard deviations, as well,
+in table~\ref{table:main result}
 
 \begin{table}[ht]
   \centering
@@ -776,14 +790,15 @@ We report corresponding standard deviations, as well, in table~\ref{table:main r
 \end{table}
 
 Our FlowNet produces predictions that have errors of lower variance
-but are a bit less accurate than~\cite{frost2016}.
+but are a bit less accurate than~\cite{frost2017using}.
 
-Figure~\ref{fig:pred_vs_gt} shows scale predictions overlayed with gt
-values for the first 750 frames of the test sequence.  The prediction
-is unbiased and noisy, clearly follows the trend of the ground truth
-values.  Around frame 550 the model predicts negative scale values,
-which is wrong.  This may be solved by proper data augmentation (e.g.,
-zero motion for a pair that consists of copies of the same image).
+Figure~\ref{fig:pred_vs_gt} shows scale predictions overlayed with the
+ground truth values for the first 750 frames of the test sequence.
+The prediction is unbiased and noisy, clearly follows the trend of the
+ground truth values.  Around frame 550 the model predicts negative
+scale values, which is wrong.  This may be solved by proper data
+augmentation (e.g., zero motion for a pair that consists of copies of
+the same image).
 
 \begin{figure}[!ht]
   \centering
@@ -792,7 +807,24 @@ zero motion for a pair that consists of copies of the same image).
   \label{fig:pred_vs_gt}
 \end{figure}
 
-We perform an additional Kalman Filter step to smooth the predictions:
+We perform an additional Kalman Filter step to smooth the predictions.
+We use constant acceleration model.  To estimate the measurement and
+the process noise we use sequence 02 as a validation set (see
+e.g.,Figure~\ref{fig:02 stats}).  In this case the filter merely
+smoothes the result and keeps the mean errors at the same level.  We
+do suggest that at least for some trajectories the filter may improve
+overall result, since it provides a physical constraint on camera
+behavior.  The neural networks are known to give erroneous output when
+the test data is far from the train data.  These are also the cases
+where the filter may be beneficial.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.9\linewidth]{02_speeds_accel_jerk}
+  \caption{KITTI sequence 02 vehicle speed, acceleration and jerk}
+  \label{fig:02 stats}
+\end{figure}
+
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=0.9\linewidth]{flownet_prediction_vs_gt_vs_kf}
@@ -800,7 +832,39 @@ We perform an additional Kalman Filter step to smooth the predictions:
   \label{fig:pred_vs_gt_vs_ekf}
 \end{figure}
 
-Motion estimation
+Finally, we show how our scale affects motion estimation.  Let a
+$N$-step path of a camera be described by a sequence of homegeneous
+rigid poses $\{T_i\}_{i=0}^N$ as described in Section~\ref{sec:our
+  method}.  In current context each $T_i$ relates the $i$-th pose of
+the camera to the beginning of the path (i.e., pose $T_0$).  Also,
+denote the corresponding scale estimates by $\{s_i\}_{i=0}^N$.  We
+construct a new path $\{\tilde{T}_i\}_{i=0}^N$ by rescaling each
+relative pose appropriately.
+
+First we compute a pose that relates camera $i-1$ to camera $i$:
+\begin{equation}\label{eq:delta T}
+  \Delta T_i = T_{i-1}^{-1}T_i
+\end{equation}
+
+We initialize a rescaled relative pose to be identical to~\ref{eq:delta T}
+\begin{equation}
+  \Delta \tilde{T}_i = \Delta T
+\end{equation}
+
+We rescale the relative pose according to be the new scale (array
+indexing follows Python numpy):
+\begin{equation}
+  \Delta \tilde{T}_i[:3,3] = s_i * \frac{\Delta T_i[:3,3]}{\norm{\Delta T_i[:3,3]}}
+\end{equation}
+
+Finally, we constuct a new pose $\tilde{i}$:
+\begin{equation}
+  \tilde{T}_i = \tilde{T}_{i-1} * \Delta \tilde{T}_i
+\end{equation}
+
+We use the above method to rescale the ground truth 00 sequence path
+according to raw scale estimation and a Kalman-smoothed one.  The
+results are shown in Figure~\ref{fig:00_motion}
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=0.9\linewidth]{00_motion}
@@ -831,7 +895,7 @@ find significant improvement.
 
 Our results show that statistical machine learning is a viable
 candidate for monocular scale estimation.  The (independent) work
-of~\cite{frost2016} also shows that it may be used to produce scale
+of~\cite{frost2017using} also shows that it may be used to produce scale
 drift free reconstructions.  This method have a benefit of not-making
 scene, camera pose assumptions, which may render them as more widely
 applicable in the future.  In this work we deliberately did no scale
@@ -845,6 +909,59 @@ to train it.
 The main challenge is how to go beyond a purely supervised approach
 and better utilize the abundance of information that is present in the
 images to get better predictions.
+
+\section{Conclusion}
+
+This work treats two related sub problems in the field of vision aided
+navigation.
+
+The first part is of geometric nature and attempts to provide a new
+insight into stereo and monocular motion estimation.  We show that if
+one is able to split the image points into disjoint sets of near and
+distant points, then we provide an estimation procedure for camera
+motion.  Our algorithm is local by design and compare favorably to its
+baseline.  By local we mean, that it does not build a map of the
+environment and thus all its decisions are based on a pair of frames
+that it sees.  Of course, there are larger SLAM systems that give
+better accuracy overall.  Our algorithm may be used as a building
+block of such systems or may be applicable in the compute-restrained
+environment.
+
+The second part of our work takes a statistical machine learning
+aproach, which leverages available data and compute power to solve
+visual navigation scaling problem.  We show how train a model to
+provide unbiased and low-variance scale estimate.  We also show a
+simple approach which uses our scale estimates to provide full 6-DOF
+motion estimation.  The work of~\cite{frost2017using} show a
+different, more complex way to do motion estimation based on similar
+scale estimates.  While current result allows for scale drift free
+motion estimation we feel that it may be greatly improved by better
+use of the available data.
+
+In recent years the field of visual navigation has matured
+research-wise, it seems that most of the important fundamental
+questions are answered.  Said that, there still is a significant gap
+between state of the art and real world systems that rely on visual
+data.  Part of this gap is in engineering, which is complex (most real
+world systems use additional modalities: lidars, depth sensors,
+etc.). We speculate that another part of the gap is that in order to
+navigate in complex (e.g., urban) environments one can not rely on
+geometric information alone and semantic understanding of the scene is
+needed.
+
+It also seems that the field is ready to take on larger-scale
+problems, such as motion estimation and mapping on a very large scale,
+collaborative large-scale mapping and navigation.  We feel that (at
+least near-future) algorithms should leverage the power of traditional
+geometry based approaches with a more recent data-driven methods.
+
+One thing that we find very important is the appearance of new and
+more challenging data sets.  KITTI, while being a great dataset is low
+in its lighting, weather conditions, scenery and traffic variability.
+We hope that a recent spree of the autonomous driving companies will
+lead to appearance of such new datasets, which in turn, will foster
+new research.
+
 
 %%% Local Variables:
 %%% mode: latex
