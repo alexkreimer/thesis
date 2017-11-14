@@ -20,9 +20,10 @@ not directly observable for a motion of a single camera.
 We argue, that for natural scenes the scale information is present in
 the images (see e.g. Figure~\ref{fig:feature_vectors}).  We propose to
 apply statistical machine learning techniques to learn the monocular
-scale.  In the following sections we present an overview of the
-existing works in the field, describe our method and present the
-experimental results.
+scale.  We experiment with random forest, convolutional neural nets
+and recurrent neural nets. In the following sections we present an
+overview of the existing works in the field, describe our method and
+present the experimental results.
 
 \section{Related work}
 \paragraph{Geometric methods} Previous geometric works in monocular
@@ -120,7 +121,8 @@ of the translation vector $\mathbf{t}$ (e.g.,
 $s = \lVert \mathbf{t} \rVert$)
 
 We pose the scale estimation problem as a regression problem and
-search for a good regressor model.
+search for a good regressor model.  We evaluate random forest, two
+different convnet architectures and a recurrent nerual network.
 
 \section{Random forest}
 
@@ -143,9 +145,11 @@ Building a decision tree may be described by a two step procedure:
   samples that belong to this region.
 \end{enumerate}
 
-The regions $R_i$ are usually chosen to be multidimensional boxes (axis aligned).  We would like to find such a partition of the feature space that minimizes
+The regions $R_i$ are usually chosen to be multidimensional boxes
+(axis aligned).  We would like to find such a partition of the feature
+space that minimizes
 \begin{equation}\label{eq:tree_objective}
-\sum\limits_{j=1}^J\sum_{x\in R_j}{(x-\mean{y}_j)^2}
+\sum\limits_{j=1}^J\sum_{x\in R_j}{(x-\mean{y}_j)^2},
 \end{equation}
 
 Where $y_j$ denotes the mean of the response values of the samples in
@@ -234,7 +238,9 @@ channel dimension to produce a single 6-channel (for color) or
 
 \subsection{ZF}
 
-The network architecture consists of five convolutional and three fully connected layers.  Table~\ref{tab:zf_geometry} summarizes the architecture.
+The network architecture consists of five convolutional and three
+fully connected layers.  Table~\ref{tab:zf_geometry} summarizes the
+architecture.
 
 \begin{table}[ht]
   \begin{tabular}{lcccc}
@@ -296,7 +302,6 @@ The flow of data through the network is shown in Figure~\ref{fig:zf data flow}.
 \caption{ZF network data flow.  Each rectangle depicts a top blob for a corresponding layer.}
 \label{fig:zf data flow}
 \end{figure}
-
 There is a last fully connected layer that reduces a network to a
 single output, which we are interested to learn.  We use euclidean
 loss to train the network.  Total number of parameters is about 624
@@ -771,7 +776,10 @@ The second result is the absolute error mean:
 The $\mu_{abs}$ and the $\sigma_{abs}$ show how close the estimates
 are to the ground truth values.  The $\mu$ shows how biased the
 estimator is.  We report corresponding standard deviations, as well,
-in table~\ref{table:main result}
+in Table~\ref{table:main result}.  Best result in each category is
+highlighted in bold.  FlowNet exibits minimal absolute error and
+lowest variance.  This is our model of choice.  Note that random
+forest has best signed mean error, but is noisy.
 
 \begin{table}[ht]
   \centering
@@ -781,7 +789,7 @@ in table~\ref{table:main result}
     \hline
     $\mu_{abs}$        & .237          & .200 & \textbf{.088}    & .097  & \\
     $\sigma_{abs}$     & .229          & .161 & \textbf{.068}    & .074  & \\
-    $\mu$              & -1.44e-3      &-.007 & \textbf{.023}    & .019  & .014\\
+    $\mu$              & \textbf{-1.44e-3}    & -.007 & .023    & .019  & .014\\
     $\sigma$           & .329          & .257 & \textbf{.109}    & .121  & .177\\
     \hline
   \end{tabular}
@@ -809,10 +817,10 @@ the same image).
 
 We perform an additional Kalman Filter step to smooth the predictions.
 We use constant acceleration model.  To estimate the measurement and
-the process noise we use sequence 02 as a validation set (see
-e.g.,Figure~\ref{fig:02 stats}).  In this case the filter merely
-smoothes the result and keeps the mean errors at the same level.  We
-do suggest that at least for some trajectories the filter may improve
+the process noise we use sequence 02 as a validation set (see e.g.,
+Figure~\ref{fig:02 stats}).  In this case the filter merely smoothes
+the result and keeps the mean errors at the same level.  We do suggest
+that at least for some trajectories the Kalman Filter may improve the
 overall result, since it provides a physical constraint on camera
 behavior.  The neural networks are known to give erroneous output when
 the test data is far from the train data.  These are also the cases
@@ -835,31 +843,31 @@ where the filter may be beneficial.
 Finally, we show how our scale affects motion estimation.  Let a
 $N$-step path of a camera be described by a sequence of homegeneous
 rigid poses $\{T_i\}_{i=0}^N$ as described in Section~\ref{sec:our
-  method}.  In current context each $T_i$ relates the $i$-th pose of
-the camera to the beginning of the path (i.e., pose $T_0$).  Also,
+  method}.  In the current context each $T_i$ relates the $i$-th pose
+of the camera to the beginning of the path (i.e., pose $T_0$).  Also,
 denote the corresponding scale estimates by $\{s_i\}_{i=0}^N$.  We
 construct a new path $\{\tilde{T}_i\}_{i=0}^N$ by rescaling each
 relative pose appropriately.
 
 First we compute a pose that relates camera $i-1$ to camera $i$:
 \begin{equation}\label{eq:delta T}
-  \Delta T_i = T_{i-1}^{-1}T_i
+  \Delta T_i = T_{i-1}^{-1}T_i,
 \end{equation}
 
-We initialize a rescaled relative pose to be identical to~\ref{eq:delta T}
+We initialize a rescaled relative pose to be identical to Eq.~\ref{eq:delta T}
 \begin{equation}
-  \Delta \tilde{T}_i = \Delta T
+  \Delta \tilde{T}_i = \Delta T,
 \end{equation}
 
 We rescale the relative pose according to be the new scale (array
 indexing follows Python numpy):
 \begin{equation}
-  \Delta \tilde{T}_i[:3,3] = s_i * \frac{\Delta T_i[:3,3]}{\norm{\Delta T_i[:3,3]}}
+  \Delta \tilde{T}_i[:3,3] = s_i * \frac{\Delta T_i[:3,3]}{\norm{\Delta T_i[:3,3]}},
 \end{equation}
 
 Finally, we constuct a new pose $\tilde{i}$:
 \begin{equation}
-  \tilde{T}_i = \tilde{T}_{i-1} * \Delta \tilde{T}_i
+  \tilde{T}_i = \tilde{T}_{i-1} * \Delta \tilde{T}_i,
 \end{equation}
 
 We use the above method to rescale the ground truth 00 sequence path
@@ -878,13 +886,13 @@ This works presents a data driven approach for monocular scale
 estimation.  We take a holistic path and learn the task end-to-end,
 rather than splitting it into different sub-tasks.
 
-We experiment with both ``shallow'' random-forest approach and more
+We experimented with both ``shallow'' random-forest approach and more
 recent deep learning methods.  Deep methods seem to outperform random
 forest consistently.
 
-We experiment with a number of deep architectures. We learn that the
+We experiment with a number of deep architectures. We learned that the
 fully convolutional architecture performs better than the traditional
-(fully-connected layer based) networks.  Use of pre-trained weights
+(fully-connected layer based) networks.  The use of pre-trained weights
 from the flow-network significantly improves the results.
 
 The network performs about the same if trained on RGB or gray images.
@@ -896,72 +904,19 @@ find significant improvement.
 Our results show that statistical machine learning is a viable
 candidate for monocular scale estimation.  The (independent) work
 of~\cite{frost2017using} also shows that it may be used to produce scale
-drift free reconstructions.  This method have a benefit of not-making
+drift free reconstructions.  These methods hav a benefit of not-making
 scene, camera pose assumptions, which may render them as more widely
 applicable in the future.  In this work we deliberately did no scale
 refinement or blending with other scale estimation methods, to show
 clearly what the convnets are capable of in this specific context.
 
-Surprisingly, LSTM didn't do better than convnets, which is against
-our expectations. The reason may be that we didn't find a proper way
+Surprisingly, LSTM did not do better than convnets, which is against
+our expectations. The reason may be that we did not find a proper way
 to train it.
 
 The main challenge is how to go beyond a purely supervised approach
 and better utilize the abundance of information that is present in the
 images to get better predictions.
-
-\section{Conclusion}
-
-This work treats two related sub problems in the field of vision aided
-navigation.
-
-The first part is of geometric nature and attempts to provide a new
-insight into stereo and monocular motion estimation.  We show that if
-one is able to split the image points into disjoint sets of near and
-distant points, then we provide an estimation procedure for camera
-motion.  Our algorithm is local by design and compare favorably to its
-baseline.  By local we mean, that it does not build a map of the
-environment and thus all its decisions are based on a pair of frames
-that it sees.  Of course, there are larger SLAM systems that give
-better accuracy overall.  Our algorithm may be used as a building
-block of such systems or may be applicable in the compute-restrained
-environment.
-
-The second part of our work takes a statistical machine learning
-aproach, which leverages available data and compute power to solve
-visual navigation scaling problem.  We show how train a model to
-provide unbiased and low-variance scale estimate.  We also show a
-simple approach which uses our scale estimates to provide full 6-DOF
-motion estimation.  The work of~\cite{frost2017using} show a
-different, more complex way to do motion estimation based on similar
-scale estimates.  While current result allows for scale drift free
-motion estimation we feel that it may be greatly improved by better
-use of the available data.
-
-In recent years the field of visual navigation has matured
-research-wise, it seems that most of the important fundamental
-questions are answered.  Said that, there still is a significant gap
-between state of the art and real world systems that rely on visual
-data.  Part of this gap is in engineering, which is complex (most real
-world systems use additional modalities: lidars, depth sensors,
-etc.). We speculate that another part of the gap is that in order to
-navigate in complex (e.g., urban) environments one can not rely on
-geometric information alone and semantic understanding of the scene is
-needed.
-
-It also seems that the field is ready to take on larger-scale
-problems, such as motion estimation and mapping on a very large scale,
-collaborative large-scale mapping and navigation.  We feel that (at
-least near-future) algorithms should leverage the power of traditional
-geometry based approaches with a more recent data-driven methods.
-
-One thing that we find very important is the appearance of new and
-more challenging data sets.  KITTI, while being a great dataset is low
-in its lighting, weather conditions, scenery and traffic variability.
-We hope that a recent spree of the autonomous driving companies will
-lead to appearance of such new datasets, which in turn, will foster
-new research.
-
 
 %%% Local Variables:
 %%% mode: latex
