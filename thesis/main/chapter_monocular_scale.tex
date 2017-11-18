@@ -723,9 +723,8 @@ in the literature.  Also, note that the loss is periodic, which
 happens because of multi-epoch training.  
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=0.9\linewidth]{flownet_train_loss}
-  \caption{FlowNet train loss. Samples taken every 100 minibatch
-    iterations.  We use minibatch of size 5}
+  \includegraphics[width=0.9\linewidth]{losses}
+  \caption{FlowNet train loss vs. test loss}
   \label{fig:flownet_train_loss}
 \end{figure}
 
@@ -741,12 +740,12 @@ overfits the data, it has a limited generalization ability.
   \centering
   \begin{tabular}{ lccccc }
     \hline
-                       & Random Forest & ZF   & FlowNet          & LSTM FlowNet \\
+                       & Random Forest  & FlowNet       \\
     \hline
-    $\mu_{abs}$        & 5.79e-06      & .200 & .088    &  \\
-    $\sigma_{abs}$     & 1.40e-05      & .161 & .068    &  \\
-    $\mu$              & 4.88e-15      &-.007 & -.    & .019  \\
-    $\sigma$           & 1.51e-05      & .257 & \textbf{.109}    & .121  \\
+    $\mu_{abs}$        & 5.79e-06       & .056          \\
+    $\sigma_{abs}$     & 1.40e-05       & .062          \\
+    $\mu$              & 4.88e-15       & -2.28e-4      \\
+    $\sigma$           & 1.51e-05       & .083          \\
     \hline
   \end{tabular}
   \caption{Training errors (in meters)}
@@ -785,12 +784,12 @@ forest has best signed mean error, but is noisy.
   \centering
   \begin{tabular}{ lccccc }
     \hline
-                       & Random Forest & ZF   & FlowNet          & LSTM FlowNet & \cite{frost2016}   \\
+                       & Random Forest     & ZF    & FlowNet          & LSTM FlowNet & \cite{frost2016}   \\
     \hline
-    $\mu_{abs}$        & .237          & .200 & \textbf{.088}    & .097  & \\
-    $\sigma_{abs}$     & .229          & .161 & \textbf{.068}    & .074  & \\
-    $\mu$              & \textbf{-1.44e-3}    & -.007 & .023    & .019  & .014\\
-    $\sigma$           & .329          & .257 & \textbf{.109}    & .121  & .177\\
+    $\mu_{abs}$        & .237              & .200  & \textbf{.078}    & .097         & \\
+    $\sigma_{abs}$     & .229              & .161  & \textbf{.061}    & .074         & \\
+    $\mu$              & \textbf{-1.44e-3} & -.007 & .023             & .017         & .014\\
+    $\sigma$           & .329              & .257  & \textbf{.098}    & .121         & .177\\
     \hline
   \end{tabular}
   \caption{Experimental Results (in meters)}
@@ -800,19 +799,24 @@ forest has best signed mean error, but is noisy.
 Our FlowNet produces predictions that have errors of lower variance
 but are a bit less accurate than~\cite{frost2017using}.
 
-Figure~\ref{fig:pred_vs_gt} shows scale predictions overlayed with the
-ground truth values for the first 750 frames of the test sequence.
-The prediction is unbiased and noisy, clearly follows the trend of the
-ground truth values.  Around frame 550 the model predicts negative
-scale values, which is wrong.  This may be solved by proper data
-augmentation (e.g., zero motion for a pair that consists of copies of
-the same image).
+Figure~\ref{fig:pred_vs_gt} shows FlowNet and random forest scale
+predictions overlayed with the ground truth values for the first 750
+frames of the test sequence.  The prediction is unbiased and noisy,
+clearly follows the trend of the ground truth values.  Random Forest
+predictions are a lot more noisy than those of the FlowNet.
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=0.9\linewidth]{flownet_prediction_vs_gt}
-  \caption{FlowNet prediction vs. ground truth}
+  \includegraphics[width=0.9\linewidth]{flownet_prediction_vs_gt_vs_rf}
+  \caption{FlowNet, Random Forest predictions vs. the ground truth}
   \label{fig:pred_vs_gt}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.9\linewidth]{rf_prediction_vs_gt}
+  \caption{Random Forest prediction vs. ground truth}
+  \label{fig:rf_pred_vs_gt}
 \end{figure}
 
 We perform an additional Kalman Filter step to smooth the predictions.
@@ -824,7 +828,10 @@ that at least for some trajectories the Kalman Filter may improve the
 overall result, since it provides a physical constraint on camera
 behavior.  The neural networks are known to give erroneous output when
 the test data is far from the train data.  These are also the cases
-where the filter may be beneficial.
+where the filter may be beneficial.  The result of applying Kalman
+Filter to both Random Forest and FlowNet predictions is in
+Figure~\ref{fig:rf_pred_vs_gt_vs_ekf} and
+Figure~\ref{fig:pred_vs_gt_vs_ekf_aug}, respectively.
 
 \begin{figure}[!ht]
   \centering
@@ -835,9 +842,16 @@ where the filter may be beneficial.
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=0.9\linewidth]{flownet_prediction_vs_gt_vs_kf}
-  \caption{FlowNet prediction vs. ground truth vs. Kalman Filter}
-  \label{fig:pred_vs_gt_vs_ekf}
+  \includegraphics[width=0.9\linewidth]{flownet_prediction_vs_gt_vs_kf_aug}
+  \caption{FlowNet with data augmentation prediction vs. ground truth vs. Kalman Filter}
+  \label{fig:pred_vs_gt_vs_ekf_aug}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.9\linewidth]{rf_prediction_vs_gt_vs_kf}
+  \caption{Random Forest prediction vs. ground truth vs. Kalman Filter}
+  \label{fig:rf_pred_vs_gt_vs_ekf}
 \end{figure}
 
 Finally, we show how our scale affects motion estimation.  Let a
@@ -872,12 +886,20 @@ Finally, we constuct a new pose $\tilde{i}$:
 
 We use the above method to rescale the ground truth 00 sequence path
 according to raw scale estimation and a Kalman-smoothed one.  The
-results are shown in Figure~\ref{fig:00_motion}
+results are in Figure~\ref{fig:00_motion} and in
+Figure~\ref{fig:00_motion_rf}.
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=0.9\linewidth]{00_motion}
+  \includegraphics[width=0.9\linewidth]{00_motion_flownet}
   \caption{Motion estimation, based on the FlowNet predictions}
   \label{fig:00_motion}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.9\linewidth]{00_motion_rf}
+  \caption{Motion estimation, based on the Random Forest predictions}
+  \label{fig:00_motion_rf}
 \end{figure}
 
 \section{Conclusions and Discussion}
