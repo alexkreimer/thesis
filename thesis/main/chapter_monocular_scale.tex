@@ -51,7 +51,7 @@ e.g.,~\cite{zhou2016reliable}, that contributes a divide-and-conquer
 approach, where they decompose the ground plane homography into the
 structure and the motion parameters.  Their optimization step is based
 on this division.  ~\cite{kitt2011monocular} take a more SLAM-like
-approach by collecting and keeping track of a constand number of
+approach by collecting and keeping track of a constant number of
 ground-plane features which they use to refine the scale.
 ~\cite{grater2015robust} complement the ground plane estimation based
 on the structure from motion techniques with vanishing point
@@ -70,7 +70,7 @@ object size change as an additional cue to determine the correct scale.
 
 Another category of works proceed by making assumptions on the camera
 motion. In~\cite{gutierrez2012full} the authors assume head-mounted
-camera and relate the vertical camera oscilation frequence to the step
+camera and relate the vertical camera oscillation frequency to the step
 length and, subsequently, to person height, which allows full 6DOF
 motion estimation. ~\cite{scaramuzza2009absolute} assumes that the
 vehicle adheres to the Ackerman steering principle and exploit the
@@ -78,13 +78,13 @@ non-holomicity of its motion, to compute the scale.
 
 \paragraph{Learning methods} There are a number of works that use
 machine learning approaches to solve the 6DOF visual odometry.
-Optical flow is used to train k-nearest neighbour, Gaussian processes
+Optical flow is used to train k-nearest neighbor, Gaussian processes
 and support vector machines in ~\cite{roberts2008memory},
 ~\cite{guizilini2013semi}, ~\cite{CIARFUGLIA20141717}
 respectively. ~\cite{wang2017deepvo} shows that visual odometry may be
 addressed in the end-to-end fashion, using the deep learning
 techniques. The authors use CNN to learn the geometric feature
-representation and the recurent neural networks to model sequential
+representation and the recurrent neural networks to model sequential
 motion dynamics. In~\cite{muller2017flowdometry}, the authors use
 optical flow images as CNN input to learn and infer camera
 motion. Authors in~\cite{DBLP:journals/corr/MohantyADGSC16} also
@@ -94,7 +94,7 @@ Recent work of~\cite{frost2017using} (our work was done independently)
 performs similar experiment to ours.  They train a convnet to predict
 camera translation vector magnitude (referred to as ``speed'').  Their
 work makes two major contributions: a method to learn a camera
-``speed'' and a regulalization method to incorporate such speed
+``speed'' and a regularization method to incorporate such speed
 prediction into a bundle adjustment procedure.  Their learning
 procedure is very similar to the one proposed in this work.  The novel
 regularization they propose penalizes differences between the
@@ -122,7 +122,7 @@ $s = \lVert \mathbf{t} \rVert$)
 
 We pose the scale estimation problem as a regression problem and
 search for a good regressor model.  We evaluate random forest, two
-different convnet architectures and a recurrent nerual network.
+different convnet architectures and a recurrent neural network.
 
 \section{Random forest}
 
@@ -628,7 +628,7 @@ to a regions farther away should be closer to zero.  This behavior can
 be observed especially well for the feature vectors that correspond to
 larger camera displacements (e.g. Figure~\ref{fig:1c}).  This figure
 is an insight why we chose this particular type of feature vector: the
-distribution of the deisplacements depends on the size of the camera
+distribution of the displacements depends on the size of the camera
 motion.
 
 \begin{figure}[!ht]
@@ -692,7 +692,7 @@ We use the extracted features to fit a random forest of 100 trees, by
 means of recursive node splitting with sub-node variance minimization.
 We use scikit-lean~\cite{scikit-learn} random forest implementation.
 As one may see in Table~\ref{table:train result}, random forest
-exibits a very low training error/variance but has weaker
+exhibits a very low training error/variance but has weaker
 generalization ability, as opposed to deep models.  One reason for
 this may be that the features are not discriminative enough, i.e., the
 feature vectors for two image pairs are very close while the scale of
@@ -715,7 +715,7 @@ epochs. We train the network from scratch.
 \paragraph{FlowNet} We train using vanilla SGD for 100
 epochs. Learning rate is initialized to 1e-5 and decreases by factor
 of .1 every 10 epochs. We start from pre-trained weights
-of~\cite{fischer2015flownet}. The training proceedes with minibatch
+of~\cite{fischer2015flownet}. The training proceeds with mini-batch
 size of 5. Train loss graph is shown in~\ref{fig:flownet_train_loss}.
 It may be that we proceed with training after the loss stopped
 decreasing, but it seems that 100 epoch training time is widely used
@@ -733,7 +733,7 @@ decreasing learning rate by .1 every 10 epochs.  We fine-tune from our
 FlowNet trained CNN trained weights.
 
 Table~\ref{table:train result} summarizes trained model error on the
-training set.  This table shows that while random forest succesfully
+training set.  This table shows that while random forest successfully
 overfits the data, it has a limited generalization ability.
 
 \begin{table}[ht]
@@ -755,28 +755,29 @@ overfits the data, it has a limited generalization ability.
 \subsection{Results}\label{sec:results}
 
 Let the ground truth sequence of camera motion scales be
-$\{y_i\}_{i=0}^N$, the predicted scales for the same sequence be
-$\{\hat{y}_i\}_{i=0}^N$ and, the corresponding error sequence be:
+$\{y_i\}_{i=1}^N$, the predicted scales for the same sequence be
+$\{\hat{y}_i\}_{i=1}^N$, and the corresponding error sequence
+$\{\delta_i\}_{i=1}^N$:
 \begin{equation}
-  \delta_i = y_i-\hat{y}_i
+  \delta_i = y_i-\hat{y}_i,
 \end{equation}
 
 We report two results, the first one is a signed error mean similar to
 the work of~\cite{frost2017using}:
 \begin{equation}
-  \mu = \frac{1}{N}\sum_0^N{\delta_i}
+  \mu = \frac{1}{N}\sum_{i=1}^N{\delta_i},
 \end{equation}
 
 The second result is the absolute error mean:
 \begin{equation}
-  \mu_{abs} = \frac{1}{N}\sum_0^N{|\delta_i|}
+  \mu_{abs} = \frac{1}{N}\sum_{i=1}^N{|\delta_i|},
 \end{equation}
 
 The $\mu_{abs}$ and the $\sigma_{abs}$ show how close the estimates
 are to the ground truth values.  The $\mu$ shows how biased the
 estimator is.  We report corresponding standard deviations, as well,
 in Table~\ref{table:main result}.  Best result in each category is
-highlighted in bold.  FlowNet exibits minimal absolute error and
+highlighted in bold.  FlowNet exhibits minimal absolute error and
 lowest variance.  This is our model of choice.  Note that random
 forest has best signed mean error, but is noisy.
 
@@ -799,11 +800,12 @@ forest has best signed mean error, but is noisy.
 Our FlowNet produces predictions that have errors of lower variance
 but are a bit less accurate than~\cite{frost2017using}.
 
-Figure~\ref{fig:pred_vs_gt} shows FlowNet and random forest scale
-predictions overlayed with the ground truth values for the first 750
-frames of the test sequence.  The prediction is unbiased and noisy,
-clearly follows the trend of the ground truth values.  Random Forest
-predictions are a lot more noisy than those of the FlowNet.
+Figure~\ref{fig:pred_vs_gt} and Figure~\ref{fig:rf_pred_vs_gt} shows
+FlowNet and random forest scale predictions overlayed with the ground
+truth values for the first 750 frames of the test sequence.  The
+prediction is unbiased and noisy, clearly follows the trend of the
+ground truth values.  Random Forest predictions are a lot more noisy
+than those of the FlowNet.
 
 \begin{figure}[!ht]
   \centering
@@ -843,7 +845,7 @@ Figure~\ref{fig:pred_vs_gt_vs_ekf_aug}, respectively.
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=0.9\linewidth]{flownet_prediction_vs_gt_vs_kf_aug}
-  \caption{FlowNet with data augmentation prediction vs. ground truth vs. Kalman Filter}
+  \caption{FlowNet prediction vs. ground truth vs. Kalman Filter}
   \label{fig:pred_vs_gt_vs_ekf_aug}
 \end{figure}
 
@@ -855,12 +857,12 @@ Figure~\ref{fig:pred_vs_gt_vs_ekf_aug}, respectively.
 \end{figure}
 
 Finally, we show how our scale affects motion estimation.  Let a
-$N$-step path of a camera be described by a sequence of homegeneous
+$N$-step path of a camera be described by a sequence of homogeneous
 rigid poses $\{T_i\}_{i=0}^N$ as described in Section~\ref{sec:our
   method}.  In the current context each $T_i$ relates the $i$-th pose
 of the camera to the beginning of the path (i.e., pose $T_0$).  Also,
 denote the corresponding scale estimates by $\{s_i\}_{i=0}^N$.  We
-construct a new path $\{\tilde{T}_i\}_{i=0}^N$ by rescaling each
+construct a new path $\{\tilde{T}_i\}_{i=0}^N$ by re-scaling each
 relative pose appropriately.
 
 First we compute a pose that relates camera $i-1$ to camera $i$:
@@ -868,38 +870,39 @@ First we compute a pose that relates camera $i-1$ to camera $i$:
   \Delta T_i = T_{i-1}^{-1}T_i,
 \end{equation}
 
-We initialize a rescaled relative pose to be identical to Eq.~\ref{eq:delta T}
+We initialize a re-scaled relative pose to be identical to Eq.~\ref{eq:delta T}
 \begin{equation}
   \Delta \tilde{T}_i = \Delta T,
 \end{equation}
 
-We rescale the relative pose according to be the new scale (array
+We re-scale the relative pose according to be the new scale (array
 indexing follows Python numpy):
 \begin{equation}
   \Delta \tilde{T}_i[:3,3] = s_i * \frac{\Delta T_i[:3,3]}{\norm{\Delta T_i[:3,3]}},
 \end{equation}
 
-Finally, we constuct a new pose $\tilde{i}$:
+Finally, we construct a new pose $\tilde{i}$:
 \begin{equation}
   \tilde{T}_i = \tilde{T}_{i-1} * \Delta \tilde{T}_i,
 \end{equation}
 
-We use the above method to rescale the ground truth 00 sequence path
+We use the above method to re-scale the ground truth 00 sequence path
 according to raw scale estimation and a Kalman-smoothed one.  The
 results are in Figure~\ref{fig:00_motion} and in
 Figure~\ref{fig:00_motion_rf}.
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=0.9\linewidth]{00_motion_flownet}
-  \caption{Motion estimation, based on the FlowNet predictions}
-  \label{fig:00_motion}
-\end{figure}
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=0.9\linewidth]{00_motion_rf}
   \caption{Motion estimation, based on the Random Forest predictions}
   \label{fig:00_motion_rf}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.9\linewidth]{00_motion_flownet}
+  \caption{Motion estimation, based on the FlowNet predictions}
+  \label{fig:00_motion}
 \end{figure}
 
 \section{Conclusions and Discussion}
@@ -926,7 +929,7 @@ find significant improvement.
 Our results show that statistical machine learning is a viable
 candidate for monocular scale estimation.  The (independent) work
 of~\cite{frost2017using} also shows that it may be used to produce scale
-drift free reconstructions.  These methods hav a benefit of not-making
+drift free reconstructions.  These methods have a benefit of not-making
 scene, camera pose assumptions, which may render them as more widely
 applicable in the future.  In this work we deliberately did no scale
 refinement or blending with other scale estimation methods, to show

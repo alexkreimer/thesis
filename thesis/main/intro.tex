@@ -1,5 +1,3 @@
-
-
 \chapter{Introduction}
 \label{chap:intro}
 
@@ -95,13 +93,23 @@ information is available at each step, which may be one of the reasons
 why stereo algorithms perform better.
 
 The rest of this document is organized in two chapters.  The first
-chapter presents a novel algorithm for monocular odometry.  We begin
-with preliminaries and notation, proceed to the description of the
-algorithm in stereo and in mono and conclude with experimental
-results.  The second chapter presents statistical machine learning
-approaches to estimate the absolute scale of a single camera.  We
-begin with preliminaries and then go on to descibe our specific
-models.  We conclude with experimental results.
+chapter presents a novel algorithm for monocular visual odometry.  The
+algorithm takes a divide and conquer approach.  It first computes the
+rotation and then a translation of the camera. We begin with
+preliminaries and notation, proceed to describe the algorithm in
+stereo and in mono and conclude with experimental results. We show,
+that our algorithm compares favorably with a chosen baseline. The
+second chapter revisits a problem of scale in monocular camera motion
+estimation.  We propose a method based on statistical machine learning
+to estimate the absolute scale of a single camera motion.  We evaluate
+random forest, convolutional neural networks and recurrent neural
+network based models.  In the preliminaries, we briefly discuss these
+models and how we apply them to the problem of scale estimation.  In
+the experiments section, we describe feature extraction, model
+training and prediction.  We show that fully convolutional network,
+called FlowNet performs best, out of selected models.  The final
+chapter, makes conclusions and notes possible directions for future
+work.
 
 %%% Local Variables:
 %%% mode: latex
